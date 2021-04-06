@@ -1,0 +1,25 @@
+.btnBox{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    height: 40px;
+    line-height: 40px;
+    background: #dddddd;
+    left: 0;
+
+}
+a{
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+}
+.hide{
+    display: none;
+}

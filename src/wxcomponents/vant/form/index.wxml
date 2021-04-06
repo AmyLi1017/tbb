@@ -1,0 +1,16 @@
+<form catchsubmit="formSubmit">
+    <view class="page-section hide">
+        <view class="page-section-title">input</view>
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd" style="margin: 30rpx 0" >
+                    <input class="weui-input" name="imageName" placeholder="这是一个输入框" v-model="icon"/>
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <view class="btn-area btnBox">
+        <button class="button text-space" type="primary" formType="submit">确认</button>
+    </view>
+</form>

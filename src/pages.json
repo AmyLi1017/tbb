@@ -1,0 +1,489 @@
+{
+	"leftWindow": {
+		"path": "windows/left-window.vue",
+		"style": {
+			"width": "350px"
+		}
+	},
+	"topWindow": {
+		"path": "windows/top-window.vue",
+		"style": {
+			"height": "60px"
+		}
+	},
+	"pages": [
+		// pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/login/phoneLogin",
+			"style": {
+				"navigationBarTitleText": "手机登录",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/login/chooseRole",
+			"style": {
+				"navigationBarTitleText": "角色选择",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		//服务记录
+		{
+			"path": "pages/main/serverList/index",
+			"style": {
+				"navigationBarTitleText": "服务记录",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		//服务记录--分包结果
+		{
+			"path": "pages/main/serverList/projectLastResult",
+			"style": {
+				"navigationBarTitleText": "分包结果",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		//我的
+		{
+			"path": "pages/main/my/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/baseInfo",
+			"style": {
+				"navigationBarTitleText": "基本信息",
+				"usingComponents": {
+					"img-form": "/wxcomponents/vant/form/index"
+				},
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/authentication",
+			"style": {
+				"navigationBarTitleText": "实名认证",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/companyInfo",
+			"style": {
+				"navigationBarTitleText": "企业认证",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/teamCard",
+			"style": {
+				"navigationBarTitleText": "班组名片",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/teamBaseInfo",
+			"style": {
+				"navigationBarTitleText": "班组信息",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/teamProject",
+			"style": {
+				"navigationBarTitleText": "项目经验",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/teamAbility",
+			"style": {
+				"navigationBarTitleText": "承包能力",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/staffCard",
+			"style": {
+				"navigationBarTitleText": "找活名片",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/staffBaseInfo",
+			"style": {
+				"navigationBarTitleText": "个人信息",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/staffAbility",
+			"style": {
+				"navigationBarTitleText": "职业技能",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/main/my/staffProject",
+			"style": {
+				"navigationBarTitleText": "项目经验",
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue534",
+							"fontSrc": "/static/uni.ttf",
+							"fontSize": "22px",
+							"color": "#FFFFFF"
+						}]
+					}
+				}
+			}
+		}
+	],
+	"subPackages": [{
+			"root": "pages/packageEmployer",
+			"pages": [{
+					"path": "teamBring",
+					"style": {
+						"navigationBarTitleText": "班组引进"
+					}
+				},
+				{
+					"path": "readProject",
+					"style": {
+						"navigationBarTitleText": "班组引进"
+					}
+				},
+				{
+					"path": "projectForm",
+					"style": {
+						"navigationBarTitleText": "班组引进"
+					}
+				},
+				{
+					"path": "teamCard",
+					"style": {
+						"navigationBarTitleText": "班组引进"
+					}
+				},
+				{
+					"path": "projectDetail",
+					"style": {
+						"navigationBarTitleText": "班组引进"
+					}
+				},
+				{
+					"path": "projectRecordList",
+					"style": {
+						"navigationBarTitleText": "报名记录"
+					}
+				},
+				{
+					"path": "teamCardOnly",
+					"style": {
+						"navigationBarTitleText": "班组详情"
+					}
+				},
+				{
+					"path": "resultCheck",
+					"style": {
+						"navigationBarTitleText": "班组结果上传"
+					}
+				},
+				{
+					"path": "resultFiles",
+					"style": {
+						"navigationBarTitleText": "项目结果上传"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/packageHeadman",
+			"pages": [{
+				"path": "findWorker",
+				"style": {
+					"navigationBarTitleText": "我的招工"
+				}
+			},{
+				"path": "publishWorker",
+				"style": {
+					"navigationBarTitleText": "我的招工"
+				}
+			},{
+				"path": "goodWorker",
+				"style": {
+					"navigationBarTitleText": "优质工人"
+				}
+			},
+			{
+				"path": "proPackage",
+				"style": {
+					"navigationBarTitleText": "优质分包"
+				}
+			},
+			{
+				"path": "projectDetail",
+				"style": {
+					"navigationBarTitleText": "分包详情"
+				}
+			},
+			{
+				"path": "workerCard",
+				"style": {
+					"navigationBarTitleText": "工人详情"
+				}
+			}
+			]
+		},
+		{
+			"root": "pages/packageStaff",
+			"pages": [{
+				"path": "goodJobs",
+				"style": {
+					"navigationBarTitleText": "优质招工"
+				}
+			},{
+				"path": "workDetail",
+				"style": {
+					"navigationBarTitleText": "招工详情"
+				}
+			},
+			{
+				"path": "myInfo",
+				"style": {
+					"navigationBarTitleText": "我的名片"
+				}
+			}
+			]
+		}
+	],
+	"globalStyle": {
+		"pageOrientation": "portrait",
+		"navigationBarTitleText": "taobanban",
+		"navigationBarTextStyle": "white",
+		"navigationBarBackgroundColor": "#5B628F",
+		"backgroundColor": "#E9F0FB",
+		"backgroundColorTop": "#E9F0FB",
+		"backgroundColorBottom": "#E9F0FB",
+		"mp-360": {
+			"navigationStyle": "custom"
+		},
+		"h5": {
+			"maxWidth": 1190,
+			"navigationBarTextStyle": "black",
+			"navigationBarBackgroundColor": "#F1F1F1"
+		}
+
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#FF8160",
+		"borderStyle": "black",
+		"backgroundColor": "#F8F8F8",
+		"list": [{
+				"pagePath": "pages/index",
+				"iconPath": "static/imgs/homeIcon.png",
+				"selectedIconPath": "static/imgs/homeSelIcon.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/main/serverList/index",
+				"iconPath": "static/imgs/orderListIcon.png",
+				"selectedIconPath": "static/imgs/orderListSelIcon.png",
+				"text": "服务记录"
+			}, {
+				"pagePath": "pages/main/my/index",
+				"iconPath": "static/imgs/userIcon.png",
+				"selectedIconPath": "static/imgs/userSelIcon.png",
+				"text": "我的"
+			}
+		]
+	}
+}
