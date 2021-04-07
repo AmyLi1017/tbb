@@ -53,7 +53,7 @@
                     }
                     let _this = this;
                     wx.showModal({
-                        title: '提示',
+                        title: '',
                         content: '确定将该招聘'+statusText+ '?',
                         cancelColor: '#AC9BA8',
                         success (res) {

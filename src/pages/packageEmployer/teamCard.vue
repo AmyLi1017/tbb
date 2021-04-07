@@ -18,10 +18,10 @@
 
         <div class="btnBox">
             <div class="left"><a class="button text-space" :class="isActive?'active':''" @click="getTeamPhone">获取联系方式</a></div>
-            <div class="right"><a class="button text-space" :class="isActive?'active':''" @click="addTeam">邀请报名</a></div>
+            <div class="right"><a class="button text-space" :class="canInvite?'active':'disable'" @click="addTeam">邀请报名</a></div>
         </div>
 
-        <popList v-if="showPopList" :showPopList="showPopList" :customerId="customerId" @click="closePop"></popList>
+        <popList v-show="showPopList" @change="inviteStatusChange" :showPopList="showPopList" :customerId="customerId" @click="closePop" v-model="inviteListTotal"></popList>
     </div>
 </template>
 
@@ -34,6 +34,7 @@
     import teamCardBaseInfo1 from '@/components/employer/team-card-baseInfo1'
     import teamCardBaseInfo2 from '@/components/employer/team-card-baseInfo2'
     import popList from '@/components/popList'
+    import util from '@/utils/index'
 
     export default {
         name: "teamCard",
@@ -76,36 +77,12 @@
                     customerId: "1sdsewweweew", // 客户id，32位字符串
                     commitment: "本人及团队以诚信为本，以质量求生存，安全质量进度同时抓", // 信用承诺
                     financial_status: 1, // 财务状况:0未知,1良好,2一般
-                    files: [
-                        '../../pages/packageEmployer/static/img/starUser2.jpg',
-                        '../../pages/packageEmployer/static/img/starUser2.jpg'
-                    ] // 材料证明:图片链接数组字符串
+                    files: [] // 材料证明:图片链接数组字符串
                 },
-                baseInfo2: [{
-                    id: "1sdsewwewqqwasweew", // 项目id
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    projectName: "项目名项目名项目名项目名1", // 项目名称
-                    mainEnterprise: "重庆建工第三建筑工程有限公司", // 总包单位
-                    contractAmount: 10000000, // 承包金额:单位分
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    files: [
-                        '../../pages/packageEmployer/static/img/starUser2.jpg',
-                        '../../pages/packageEmployer/static/img/starUser2.jpg'
-                    ]// 材料证明:图片链接数组字符串
-                },{
-                    id: "1sdsewwewqqwasweew2", // 项目id
-                    customerId: "1sdsewweweew2", // 客户id，32位字符串
-                    projectName: "项目名项目名项目名项目名2", // 项目名称
-                    mainEnterprise: "重庆建工第三建筑工程有限公司2", // 总包单位
-                    contractAmount: 20000000, // 承包金额:单位分
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    files: [
-                        '../../pages/packageEmployer/static/img/starUser2.jpg',
-                        '../../pages/packageEmployer/static/img/starUser2.jpg'
-                    ] // 材料证明:图片链接数组字符串
-                }],
+                baseInfo2: [],
                 applyStatus: 1,
-
+                inviteListTotal: 0,
+                canInvite: true,
                 isActive: false,
                 showPopList: false
             }
@@ -117,6 +94,7 @@
             },
             //获取班组联系方式
             getTeamPhone(){
+              let _this = this;
                 //判断用户是否实名--------------判断获取次数，待定
                 if (this.isAuthentication == 1) {
                     let data = {id: this.customerId};
@@ -144,24 +122,30 @@
                     });
                 }
             },
+            inviteStatusChange(value) {
+                this.canInvite = value;
+                this.showPopList = false;
+            },
             addTeam(){
+              if (this.canInvite) {
                 if (this.inviteListTotal == 0){
-                    uni.showModal({
-                        title: '',
-                        content: '您还没有发布班组引进需求，请先去发布再邀请班组',
-                        confirmText: '立即发布',
-                        success: function (res) {
-                            if (res.confirm) {
-                                uni.navigateTo({
-                                    url: "/pages/packageEmployer/projectForm"
-                                });
-                            } else if (res.cancel) {
-                            }
-                        }
-                    });
+                  uni.showModal({
+                    title: '',
+                    content: '您还没有发布班组引进需求，请先去发布再邀请班组',
+                    confirmText: '立即发布',
+                    success: function (res) {
+                      if (res.confirm) {
+                        uni.navigateTo({
+                          url: "/pages/packageEmployer/projectForm"
+                        });
+                      } else if (res.cancel) {
+                      }
+                    }
+                  });
                 }else {
-                    this.showPopList = true
+                  this.showPopList = true
                 }
+              }
             },
             loadInfo(){
                 let data = {customerId: this.customerId};
@@ -173,16 +157,17 @@
                 });
 
                 //获取班组基本信息
+              let _this = this;
                 api.postTeamCustomerInfo(data).then(res => {
                     if (res.messageId == 1000) {
                         _this.info2 = res.body;
 
                         let workTypeText = '';
-                        for (let i;i<res.body.workTypeList.length;i++){
-                            if (i < res.body.workTypeList - 1) {
-                                workTypeText += res.body.workTypeList[i] + '、';
+                        for (let i = 0; i<res.body.teamWorkTypeList.length; i++){
+                            if (i < res.body.teamWorkTypeList - 1) {
+                                workTypeText += res.body.teamWorkTypeList[i].workTypeName + '、';
                             }else {
-                                workTypeText += res.body.workTypeList[i]
+                                workTypeText += res.body.teamWorkTypeList[i].workTypeName
                             }
                         }
                         _this.info2.workTypeList = workTypeText;
@@ -193,12 +178,14 @@
                 //获取班组承包信息
                 api.postTeamCustomerAbility(data).then(res => {
                     if (res.messageId == 1000) {
-                        _this.baseInfo1 = res.body;
+                      let body = res.body;
+                      body.files = util.urlStringToArray(body.files);
+                        _this.baseInfo1 = body
                     }
                 });
             },
             loadData(isLoadMore){
-
+              let _this = this;
                 //获取班组项目经验
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
@@ -227,19 +214,24 @@
                             this.isLoadMore = false
                         }
 
+                        let list = res.body.data;
+                        list = list.map(item => {
+                          item.files = util.urlStringToArray(item.files);
+                          return item
+                        })
                         if (isLoadMore) {
-                            _this.baseInfo2 = this.baseInfo2.concat(res.body.data)
+                          _this.baseInfo2 = _this.baseInfo2.concat(list)
                         } else {
                             wx.pageScrollTo({
                                 scrollTop:0
                             });
-                            this.baseInfo2 = res.body.data
+                            _this.baseInfo2 = list
                         }
                     }else {
                         wx.hideLoading();
                         wx.showToast({
                             icon: "none",
-                            title: error
+                            title: '网络错误！'
                         });
                         this.isLoadMore = false;
                     }
@@ -247,14 +239,14 @@
                     wx.hideLoading();
                     wx.showToast({
                         icon: "none",
-                        title: error
+                        title: '网络错误！'
                     });
                     this.isLoadMore = false;
                 });
             },
         },
         onLoad() {
-            this.isAuthentication = store.state.user.customer.isAuthentication;
+            this.isAuthentication = store.state.user.isAuthentication;
             this.customerId = this.$root.$mp.query.id;
             this.loadData(false);//获取项目经验信息
             this.loadInfo();//获取基本信息
@@ -315,6 +307,9 @@
                 flex: 1;
                 background: @otherColorY;
             }
+          .disable{
+            background: #9EB4C8;
+          }
         }
     }
 </style>

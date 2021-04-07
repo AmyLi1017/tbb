@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="liList" v-for="(item,index) in teamList" :key="index" @click="goNext(item.customerId)">
+        <div class="liList" v-for="(item,index) in teamList" :key="index" @click="goNext(item.id)">
             <div class="listTop">
                 <div class="left"><img :src="item.icon" mode="widthFix"></div>
                 <div class="right">

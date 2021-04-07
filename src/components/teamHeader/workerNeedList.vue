@@ -4,13 +4,10 @@
             <div class="content">
                 <div class="head">
                     <div class="rt title">{{item.requirementName}}</div>
+                    <div class="lf">{{item.salarText}}</div>
                 </div>
-
-                <div class="p uni-flex">
-                    <div class="uni-flex-item overflowE" style="flex: 2;">{{item.workText}}</div>
-                    <div class="uni-flex-item text-right otherColorR" style="flex: 1;">{{item.salarText}}元/日</div>
-                </div>
-                <div class="p des">{{item.description}}</div>
+                <div class="p">{{item.workText}}</div>
+                <div class="p">{{item.description}}</div>
             </div>
             <div class="btnBox">
                 <div class="rt"><a class="button text-space" :class="isActive?'active':''" @click="changeStatus(0,item.id)">修改</a></div>
@@ -56,10 +53,6 @@
                 .title{
                     font-size: 14px;
                     font-weight: bold;
-                    display: -webkit-box;
-                    -webkit-box-orient: vertical;
-                    -webkit-line-clamp: 1;
-                    overflow: hidden;
                 }
                 .rt{
                     flex: 5;
@@ -72,12 +65,6 @@
             }
             .p{
                 color: @delColor;
-            }
-            .des{
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 1;
-                overflow: hidden;
             }
         }
         .btnBox{

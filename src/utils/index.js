@@ -26,17 +26,19 @@ function replaceFont(str){
     return str.replace(/font/g,"label");//去掉所有的html标记
 }
 
-function formatTime(time) {
-    let date = new Date(time);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+export function formatTime(date) {
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
 
-    const hour = date.getHours();
-    const minute = date.getMinutes();
-    const second = date.getSeconds();
+    const hour = date.getHours()
+    const minute = date.getMinutes()
+    const second = date.getSeconds()
 
-    return year+'/'+month+'/'+day+' '+hour+':'+minute+':'+second;
+    const t1 = [year, month, day].map(formatNumber).join('/')
+    const t2 = [hour, minute, second].map(formatNumber).join(':')
+
+    return `${t1} ${t2}`
 }
 
 function formatMoney(money) {
@@ -46,6 +48,13 @@ function formatMoney(money) {
     //    return parseInt(float_money / 10000) + "亿" + limit + "万"
     // }
     return float_money.toFixed(2) + "万"
+}
+
+function urlStringToArray(string) {
+    let str = string;
+    let reg = new RegExp(']')
+    let clearStr = (str = str.substr(1)).replace(reg,"")
+    return clearStr.split(',')
 }
 
 function IdCodeValid(code){
@@ -187,7 +196,7 @@ function dataCode (res) {
   let data = false;
   if (messageId == 1000) {
     data = res;
-  } 
+  }
   if (messageId == 1001) {
     wx.showToast({
       title:'账号不存在',
@@ -357,6 +366,7 @@ export default {
     loginAction,
     textForm,
     checkEmail,
+    urlStringToArray,
     dataCode,
     rightLimitControl
 }

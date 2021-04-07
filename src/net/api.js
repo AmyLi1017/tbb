@@ -10,7 +10,7 @@ let api = {
     postOneImg(formData){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_ONE_IMG,formData).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -27,7 +27,7 @@ let api = {
     getPhoneCheckCode(phone,randomValue){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PHONE_CODE,{phone: phone, randomValue:randomValue}).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -43,7 +43,7 @@ let api = {
     postPhoneLogin(phone, phoneCode, randomValue){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PHONE_LOGIN, { phone: phone, phoneCode: phoneCode, randomValue: randomValue, }).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -62,7 +62,7 @@ let api = {
                 cityId: obj.cityId, cityName: obj.cityName, detailAddr: obj.detailAddr, typeId: obj.typeId, typeName: obj.typeName, description: obj.description,
                 endTime: obj.endTime, places: obj.places, files: obj.files
             }).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -94,7 +94,7 @@ let api = {
     postRegion(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_CITY_REGION, {level: obj.level,parentId:obj.proId}).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -126,7 +126,7 @@ let api = {
     postTeamsSearch(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAMS_SEARCH, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -139,10 +139,10 @@ let api = {
     },
 
     //企业-班组-客户基本信息获取
-    postTeamCustomerBase(){
+    postTeamCustomerBase(data){
         return new Promise((resolve, reject) => {
-            fly.get(URL.POST_TEAMS_CUSTOMER_BASE).then(res => {
-                if (res.messageId == 1000) {
+            fly.post(URL.POST_TEAMS_CUSTOMER_BASE,data).then(res => {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -158,7 +158,7 @@ let api = {
     postTeamCustomerInfo(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAMS_CUSTOMER_INFO, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -174,7 +174,7 @@ let api = {
     postTeamCustomerAbility(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAMS_CUSTOMER_ABILITY, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -190,7 +190,7 @@ let api = {
     postTeamCustomerProject(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAMS_CUSTOMER_PROJECT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res.msg)
@@ -206,7 +206,7 @@ let api = {
     postCustomerPhone(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_CUSTOMER_PHONE, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -222,7 +222,7 @@ let api = {
     postCustomerInviteList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_CUSTOMER_INVITE_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -238,7 +238,7 @@ let api = {
     postCustomerInviteProjects(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_CUSTOMER_INVITE_PROJECTS, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -254,7 +254,7 @@ let api = {
     postServiceRecordList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_SERVICE_RECORD_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -270,7 +270,7 @@ let api = {
     postServiceRecordStatus(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_SERVICE_RECORD_STATUS, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -286,7 +286,7 @@ let api = {
     postServiceRecordTop(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_SERVICE_RECORD_TOP, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -302,7 +302,7 @@ let api = {
     postProjectRequirement(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_REQUIREMENT_GET, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -318,7 +318,7 @@ let api = {
     postProjectTeamsGet(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_TEAMS_GET, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -334,7 +334,23 @@ let api = {
     postTeamIsSuit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_IS_SUIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
+                    resolve(res)
+                } else {
+                    reject(res)
+                }
+            }).catch(error => {
+                console.error(error);
+                reject("网络错误")
+            })
+        })
+    },
+
+    //企业-服务记录-需求引进成功或失败标记
+    postProjectResultPush(obj){
+        return new Promise((resolve, reject) => {
+            fly.post(URL.POST_PROJECT_RESULT_PUSH, obj).then(res => {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -350,7 +366,7 @@ let api = {
     postProjectTeamsInfo(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_TEAMS_INFO, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -367,7 +383,7 @@ let api = {
     postProjectTeamsImg(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_TEAMS_IMG, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -383,7 +399,7 @@ let api = {
     postProjectTeamsImgSave(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_TEAMS_IMG_SAVE, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -399,7 +415,7 @@ let api = {
     postTeamSuitList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_SUIT_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -416,7 +432,7 @@ let api = {
     postTeamResultPublish(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_RESULT_PUBLISH, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -432,7 +448,7 @@ let api = {
     postPublishList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PUBLISH_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -448,7 +464,7 @@ let api = {
     postWorkerRequirementAdd(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_REQUIREMENT_ADD, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -464,7 +480,7 @@ let api = {
     postWorkerRequirementEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_REQUIREMENT_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -480,7 +496,7 @@ let api = {
     postWorkerRequirementGet(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_REQUIREMENT_GET, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -496,7 +512,7 @@ let api = {
     postWorkerRequirementRefresh(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_REQUIREMENT_REFRESH, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -512,7 +528,7 @@ let api = {
     postWorkerRequirementStatus(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_REQUIREMENT_STATUS, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -528,7 +544,7 @@ let api = {
     postTeamServiceList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_SERVICE_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -544,7 +560,7 @@ let api = {
     postEnterpriseProjectResult(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_ENTERPRISE_PROJECT_RESULT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -560,7 +576,7 @@ let api = {
     postTeamServiceDelete(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_SERVICE_DELETE, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -576,7 +592,7 @@ let api = {
     postTeamServiceSign(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_SERVICE_SIGN, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -592,7 +608,7 @@ let api = {
     postProjectSearch(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_SEARCH, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -608,7 +624,7 @@ let api = {
     postProjectTeamSignUp(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_TEAM_SIGN_UP, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -624,7 +640,7 @@ let api = {
     postProjectPublishTimes(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_PUBLISH_TIMES, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -640,7 +656,7 @@ let api = {
     postProjectAuthor(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_AUTHOR, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -656,7 +672,7 @@ let api = {
     postProjectContact(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_PROJECT_CONTACT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -672,7 +688,7 @@ let api = {
     postGoodWorkerList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_GOOD_WORKER_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -688,7 +704,7 @@ let api = {
     postWorkerBaseInfo(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_BASE_INFO, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -704,7 +720,7 @@ let api = {
     postWorkerProjectList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_PROJECT_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -720,7 +736,7 @@ let api = {
     postWorkerAbilityInfo(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_WORKER_ABILITY_INFO, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -736,7 +752,7 @@ let api = {
     postStaffWorkList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_WORK_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -752,7 +768,7 @@ let api = {
     getCustomerToken(){
         return new Promise((resolve, reject) => {
             fly.get(URL.GET_CUSTOMER_TOKEN).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -768,7 +784,7 @@ let api = {
     postEditBaseInfo(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_EDIT_BASE_INFO, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -784,7 +800,7 @@ let api = {
     getNationalList(){
         return new Promise((resolve, reject) => {
             fly.get(URL.GET_NATIONAL_LIST).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -800,7 +816,7 @@ let api = {
     postIdCard(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_ID_CARD, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -816,7 +832,7 @@ let api = {
     postCustomerAuthenticationUpdate(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_CUSTOMER_AUTHENTICATION_UPDATE, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -832,7 +848,7 @@ let api = {
     getCenterCompanyInfo(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.GET_COMPANY_INFO, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -848,7 +864,7 @@ let api = {
     postCompanyInfoEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_COMPANY_INFO_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -864,7 +880,7 @@ let api = {
     postTeamBaseInfoEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_BASE_INFO_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -881,7 +897,7 @@ let api = {
     postTeamAbilityGet(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_ABILITY_GET, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -897,7 +913,7 @@ let api = {
     postTeamAbilityEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_ABILITY_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -913,7 +929,7 @@ let api = {
     postTeamProjectAdd(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_PROJECT_ADD, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -929,7 +945,7 @@ let api = {
     postTeamProjectEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_PROJECT_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -945,7 +961,7 @@ let api = {
     postTeamProjectGet(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_TEAM_PROJECT_GET, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -961,7 +977,7 @@ let api = {
     getWorkerInfo(){
         return new Promise((resolve, reject) => {
             fly.get(URL.GET_WORKER_INFO).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -977,7 +993,7 @@ let api = {
     postStaffAbilityList(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_ABILITY_LIST, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -993,7 +1009,7 @@ let api = {
     postStaffInfoEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_INFO_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -1009,7 +1025,7 @@ let api = {
     postStaffAbilityEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_ABILITY_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -1025,7 +1041,7 @@ let api = {
     postStaffAbilityGet(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_ABILITY_GET, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -1041,7 +1057,7 @@ let api = {
     postStaffProjectGet(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_PROJECT_GET, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -1057,7 +1073,7 @@ let api = {
     postStaffProjectAdd(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_PROJECT_ADD, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -1073,7 +1089,7 @@ let api = {
     postStaffProjectEdit(obj){
         return new Promise((resolve, reject) => {
             fly.post(URL.POST_STAFF_PROJECT_EDIT, obj).then(res => {
-                if (res.messageId == 1000) {
+                if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
                     reject(res)
@@ -1119,7 +1135,7 @@ let api = {
   login(code, encryptedData, iv, cloudID) {
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_USER_INFO, { code: code, encryptedData: encryptedData, iv: iv, cloudID:cloudID }).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1135,7 +1151,7 @@ let api = {
   token_register() {
     return new Promise((resolve, reject) => {
       fly.get(URL.POST_TOKEN_REGISTER).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1152,7 +1168,7 @@ let api = {
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_IS_REGISTER,{account: account}).then(res => {
         console.log(res)
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1169,7 +1185,7 @@ let api = {
   accountLogin(account,password){
     return new Promise((resolve, reject) => {
       fly.post(URL.POST_ACCOUNT_LOGIN, { account: account, password: password}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.zhError)
@@ -1197,7 +1213,7 @@ let api = {
   echoUserInfo(){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_ECHO_USER_INFO).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.zhError)
@@ -1213,7 +1229,7 @@ let api = {
   editUserInfo(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.POST_EDIT_USER_INFO, data).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1229,7 +1245,7 @@ let api = {
   loadCustomersInfo(){
     return new Promise((resolve, reject) => {
       fly.get(URL.LOAD_CUSTOMERS_INFO).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1245,7 +1261,7 @@ let api = {
   getMyHistory(pageSize,pageIndex){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_MY_HISTORY, {page_size: pageSize,page_index: pageIndex}).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.zhError)
@@ -1261,7 +1277,7 @@ let api = {
   getMyCollect(pageSize,pageIndex){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_MY_COLLECT, {page_size: pageSize,page_index: pageIndex}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.zhError)
@@ -1277,7 +1293,7 @@ let api = {
   MyCollectChange(company_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_CANCEL_MY_COLLECT, {company_id: company_id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1293,7 +1309,7 @@ let api = {
   cancelCollect(company_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.CANCEL_MY_COLLECT, {company_id: company_id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1309,7 +1325,7 @@ let api = {
   loadProvince() {
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_PROVINCE).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1325,7 +1341,7 @@ let api = {
   loadLocation() {
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_LOCATION).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1346,7 +1362,7 @@ let api = {
         page_index: pageIndex,
         page_size: pageSize
       }).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1362,7 +1378,7 @@ let api = {
   getCompanyInfo(company_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_COMPANY_BASICTOP_INFO, {company_id: company_id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1379,7 +1395,7 @@ let api = {
   getCompanyGSBasicInfo(company_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_COMPANY_GS_BASIC_INFO, {company_id: company_id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1396,7 +1412,7 @@ let api = {
   getCompanyGSEquityInfo(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_GS_EQUITY_LIST_INFO, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1413,7 +1429,7 @@ let api = {
   getCompanyGSChangeInfo(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_GS_CHANGE_LIST_INFO, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1430,7 +1446,7 @@ let api = {
   getCompanyGSMainMembersInfo(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_GS_MAIN_MEMBERS_LIST_INFO, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1447,7 +1463,7 @@ let api = {
   getCompanyGSBranchInfo(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_GS_BRANCH_LIST_INFO, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1464,7 +1480,7 @@ let api = {
   getCompanyGSAbnormalInfo(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_GS_ABNORMAL_LIST_INFO, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1481,7 +1497,7 @@ let api = {
   getCompanyGSContactInfo(company_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_COMPANY_GS_CONTACT_INFO, {company_id: company_id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1515,7 +1531,7 @@ let api = {
   getCompanyCertList(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_CERT_LIST, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 3001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 3001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1532,7 +1548,7 @@ let api = {
   getCompanyStaffList(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_STAFF_LIST, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1549,7 +1565,7 @@ let api = {
   getStaffCertList(staff_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_STAFF_CERT_LIST, {staff_id: staff_id}).then(res => {
-        if (res.messageId == 1000 || res.messageId == 3001 || res.messageId == 3002 || res.messageId == 3003) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 3001 || res.messageId == 3002 || res.messageId == 3003) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1566,7 +1582,7 @@ let api = {
   getStaffProList(data){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_STAFF_PRO_LIST, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 3001 || res.messageId == 3002 || res.messageId == 3003) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 3001 || res.messageId == 3002 || res.messageId == 3003) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1583,7 +1599,7 @@ let api = {
   getStaffChangeList(staff_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_STAFF_CHANGE_LIST, {staff_id: staff_id}).then(res => {
-        if (res.messageId == 1000 || res.messageId == 3001 || res.messageId == 3002 || res.messageId == 3003) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 3001 || res.messageId == 3002 || res.messageId == 3003) {
           resolve(res)
         } else {
           reject(res)
@@ -1600,7 +1616,7 @@ let api = {
   getCompanyProList(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.GET_COMPANY_PRO_LIST, data).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1617,7 +1633,7 @@ let api = {
   achieveMultiple(projectId) {
     return new Promise((resolve, reject) => {
       fly.get(URL.SKY_ACHIEVE_MULTIPLY, { project_id: projectId}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1631,7 +1647,7 @@ let api = {
   achieveBidList(data) {
     return new Promise((resolve, reject) => {
       fly.post(URL.SKY_ACHIEVE_BIDLIST, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1645,7 +1661,7 @@ let api = {
   achieveBidInfo(id) {
     return new Promise((resolve, reject) => {
       fly.get(URL.SKY_ACHIEVE_BIDINFO,{bid_id:id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1659,7 +1675,7 @@ let api = {
   achieveExamineList(data) {
     return new Promise((resolve, reject) => {
       fly.post(URL.SKY_ACHIEVE_EXAMINELIST,data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1673,7 +1689,7 @@ let api = {
   achieveExamineInfo(id) {
     return new Promise((resolve, reject) => {
       fly.get(URL.SKY_ACHIEVE_EXAMINEINFO,{review_id:id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1687,7 +1703,7 @@ let api = {
   achieveContractList(data) {
     return new Promise((resolve, reject) => {
       fly.post(URL.SKY_ACHIEVE_CONTRACTLIST,data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1701,7 +1717,7 @@ let api = {
   achieveContractInfo(id) {
     return new Promise((resolve, reject) => {
       fly.get(URL.SKY_ACHIEVE_CONTRACTINFO,{contract_id:id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1715,7 +1731,7 @@ let api = {
   achieveLicenseList(data) {
     return new Promise((resolve, reject) => {
       fly.post(URL.SKY_ACHIEVE_LICENSELIST,data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1729,7 +1745,7 @@ let api = {
   achieveLicenseInfo(id) {
     return new Promise((resolve, reject) => {
       fly.get(URL.SKY_ACHIEVE_LICENSEINFO,{licence_id:id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1743,7 +1759,7 @@ let api = {
   achieveFinishList(data) {
     return new Promise((resolve, reject) => {
       fly.post(URL.SKY_ACHIEVE_FINISHLIST,data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.code)
@@ -1757,7 +1773,7 @@ let api = {
   achieveFinishInfo(id) {
     return new Promise((resolve, reject) => {
       fly.get(URL.SKY_ACHIEVE_FINISEHINFO,{complete_id:id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res)
@@ -1771,7 +1787,7 @@ let api = {
   achieveCompanyList(params) {
     return new Promise((resolve, reject) => {
       fly.get(URL.SKY_ACHIEVE_COMPANYLIST,params).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res.data)
         } else {
           reject(res)
@@ -1792,7 +1808,7 @@ let api = {
         page_index: pageIndex,
         page_size: pageSize
       }).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1808,7 +1824,7 @@ let api = {
   loadApartCity(region_type){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_APART_CITY, {region_type: region_type}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1824,7 +1840,7 @@ let api = {
   loadCategory(parent_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_GATEGORY,{parent_id: parent_id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1840,7 +1856,7 @@ let api = {
   getCerts(parent_id){
     return new Promise((resolve, reject) => {
       fly.get(URL.GET_CERT,{parent_id:parent_id}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1856,7 +1872,7 @@ let api = {
   loadSearchCertsList(data){
     return new Promise((resolve, reject) => {
       fly.post(URL.LOAD_SEARCH_CERTS_LIST, data).then(res => {
-        if (res.messageId == 1000 || res.messageId == 2001) {
+        if (res.messageId == 1000 || res.messageId == 2001 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.msg)
@@ -1871,7 +1887,7 @@ let api = {
   loadServiceList(level){
     return new Promise((resolve, reject) => {
       fly.get(URL.LOAD_SERVICE_LIST, {vip_level:level}).then(res => {
-        if (res.messageId == 1000) {
+        if (res.messageId == 1000 || res.messageId == 2001) {
           resolve(res)
         } else {
           reject(res.zhError)

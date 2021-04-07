@@ -35,19 +35,23 @@
         name: "popList",
         props: {
             showPopList: '',
-            customerId: ''
+            customerId: '',
+            value: ''
         },
         data(){
             return {
                 isActive: '',
                 invitePageIndex: 1,
                 invitePageTotal: '',
-                inviteListTotal: 5,
+                inviteListTotal: this.value,
                 inviteLists: '',
-                checkedValLists: [],
+                checkedValLists: []
             }
         },
         methods: {
+            setValue(){
+              this.$emit('input',e.target.value);
+            },
             closePop(){
                 this.showPopList = false;
                 this.$emit('click',this.showPopList)
@@ -70,32 +74,42 @@
                 for (let h = 0; h < this.checkedValLists.length; h++) {
                     data.ids.push(this.checkedValLists[h].value)
                 }
-                console.log(data,'data');
-                api.postCustomerInviteProjects(data).then(res => {
+                let _this = this;
+              uni.showModal({
+                title: '邀请报名',
+                content: '确定邀请班组报名？',
+                showCancel: true,
+                cancelColor: '#ddd',
+                success: function (){
+                  api.postCustomerInviteProjects(data).then(res => {
                     if (res.messageId == 1000) {
-                        uni.showToast({
-                            title: '邀请报名成功！',
-                            icon: "none",
-                            duration: 2000
-                        });
+                      uni.showToast({
+                        title: '邀请报名成功！',
+                        icon: "none",
+                        duration: 2000
+                      });
+                      setTimeout(function () {
+                        _this.$emit('change',false)
+                      },1000)
                     }else {
-                        uni.showToast({
-                            title: '邀请报名失败，请重试！',
-                            icon: "none",
-                            duration: 2000
-                        });
-                    }
-                }).catch(res => {
-                    uni.showToast({
+                      uni.showToast({
                         title: '邀请报名失败，请重试！',
                         icon: "none",
                         duration: 2000
+                      });
+                    }
+                  }).catch(res => {
+                    uni.showToast({
+                      title: '邀请报名失败，请重试！',
+                      icon: "none",
+                      duration: 2000
                     });
-                });
+                  });
+                }
+              })
             },
             saveChecked(){
                 //保存选择
-                console.log(this.inviteLists,'inviteLists');
                 for (let q = 0; q < this.inviteLists.length; q++){
                     let item = this.inviteLists[q];
                     if (item.checked == true){
@@ -123,14 +137,13 @@
                         }
                     }
                 }
-                console.log(this.checkedValLists,'checkedValLists');
             },
             loadPublish(isLoadMore){
                 if (isLoadMore) {
                     if (this.invitePageIndex < this.invitePageTotal){
                         this.invitePageIndex += 1;
                     } else {
-                        this.invitePageIndex == 1;
+                        this.invitePageIndex = 1;
                     }
                 }
                 let data = {
@@ -139,75 +152,32 @@
                     pageSize: 5
                 };
                 //获取用户发布列表
+              let _this = this;
                 api.postCustomerInviteList(data).then(res => {
                     if (res.messageId == 1000) {
                         let inviteList = [];
                         let list = res.body.data;
-                        this.inviteLists = [];
+                        _this.inviteLists = [];
                         for (let e=0; e < list.length; e++){
                             let item = {name: '',value: '',checked: ''};
                             item.name = list[e].projectName;
                             item.value = list[e].id;
                             //循环checkedValue
-                            for (let g=0; g < this.checkedValLists.length; g++){
-                                if (item.value == this.checkedValLists[g].value) {
-                                    item.checked = this.checkedValLists[g].checked;
+                            for (let g=0; g < _this.checkedValLists.length; g++){
+                                if (item.value == _this.checkedValLists[g].value) {
+                                    item.checked = _this.checkedValLists[g].checked;
                                 }
                             }
-
                             inviteList.push(item);
-                            console.log(inviteLists,'inviteLists')
                         }
-                        _this.inviteList = inviteList;
+                        _this.inviteLists = inviteList;
                         _this.inviteListTotal = res.body.total;
+                        _this.invitePageTotal = res.body.pageTotal;
+                        _this.$emit('input', res.body.total)
                     }
                 });
-
-                //测试数据--------------------------------------------------------
-                let list =  [{
-                    id: "1", // 项目id
-                    projectName: "项目名称1", // 项目名称
-                    signWay: 1  // 报名方式:0未邀请,1主动,2邀请，null是没有报名
-                },{
-                    id: "2", // 项目id
-                    projectName: "项目名称2", // 项目名称
-                    signWay: 1  // 报名方式:0未邀请,1主动,2邀请，null是没有报名
-                },{
-                    id: "3", // 项目id
-                    projectName: "项目名称3", // 项目名称
-                    signWay: 1  // 报名方式:0未邀请,1主动,2邀请，null是没有报名
-                },{
-                    id: "4", // 项目id
-                    projectName: "项目名称4", // 项目名称
-                    signWay: 1  // 报名方式:0未邀请,1主动,2邀请，null是没有报名
-                },{
-                    id: "5", // 项目id
-                    projectName: "项目名称5", // 项目名称
-                    signWay: 1  // 报名方式:0未邀请,1主动,2邀请，null是没有报名
-                }
-                    ];
-                this.invitePageTotal = 6;
-                this.inviteLists = [];
-                for (let e=0; e < list.length; e++){
-                    let item = {name: '',value: '',checked: ''};
-                    item.name = list[e].projectName;
-                    item.value = list[e].id;
-                    //循环checkedValue
-                    for (let t=0; t < this.checkedValLists.length; t++){
-                        if (item.value == this.checkedValLists[t].value) {
-                            item.checked = this.checkedValLists[t].checked;
-                        }
-                    }
-
-                    this.inviteLists.push(item);
-                    console.log(this.inviteLists,'inviteLists')
-                }
-
-
             },
             checkboxChange(e) {
-                console.log('checkbox发生change事件，携带value值为：', e.detail.value);
-
                 const items = this.inviteLists;
                 const values = e.detail.value;
                 for (let i = 0, lenI = items.length; i < lenI; ++i) {

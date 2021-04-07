@@ -6,7 +6,7 @@
         </div>
         <div class="p">
             <span class="text">期望工作地：</span>
-            <span class="val">{{info.provinceName}}-{{info.cityName}}</span>
+            <span class="val">{{info.provinceName}}<span v-if="info.cityName">-{{info.cityName}}</span></span>
         </div>
         <div class="p">
             <span class="text">身&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;份：</span>

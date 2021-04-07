@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="btnBox" v-if="listType == 1">
-                <div><span class="btn" @click="goToTeamList(item.id)">{{item.signPresons}}人报名</span></div>
+                <div><span class="btn" @click="goToTeamList(item.id)">{{item.signPersons}}人报名</span></div>
                 <div class="row">
                     <span class="btn stop" @click="clickPublish(0,item.id)">停止发布</span>
                     <span class="toTop" v-if="listType == 1" @click="clickPublish(1,item.id)"><span class="iconfont iconicon_top"></span></span>
@@ -31,7 +31,7 @@
 
             </div>
             <div class="btnBox" v-if="listType == 0">
-                <div><span class="btn" @click="goToTeamList(item.id)">{{item.signPresons}}人报名</span></div>
+                <div><span class="btn" @click="goToTeamList(item.id)">{{item.signPersons}}人报名</span></div>
                 <div>
                     <span class="btn stop" v-if="item.recommendStatus == 0" @click="goToResultCheck(item.id)">结果确认</span>
                     <span class="btn success" v-if="item.recommendStatus == 1" @click="goToResult(item.id)">引进成功</span>

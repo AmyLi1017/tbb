@@ -6,9 +6,9 @@
             <span class="val">{{info.commitment}}</span></div>
         <div class="p">
             <span class="text">财务状况：</span>
-            <span class="val" v-if="info.financial_status == 0">未知</span>
-            <span class="val" v-if="info.financial_status == 1">良好</span>
-            <span class="val" v-if="info.financial_status == 2">一般</span>
+            <span class="val" v-if="info.financialStatus == 0">未知</span>
+            <span class="val" v-if="info.financialStatus == 1">良好</span>
+            <span class="val" v-if="info.financialStatus == 2">一般</span>
         </div>
         <div class="p">
             <span class="text">材料证明：</span>

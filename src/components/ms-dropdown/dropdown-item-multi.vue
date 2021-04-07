@@ -83,12 +83,12 @@
         watch: {
             multiList: {
                 immediate: true,
-                handler(val){this.multiLists = val;},
+                handler(val){this.multiLists = val;console.log(val,'watchMulti')},
                 deep: true
             },
             multiVal: {
                 immediate: true,
-                handler(val){this.multiValue = val;},
+                handler(val){this.multiValue = val;console.log(val,'watchMultiVal')},
                 deep: true
             },
 

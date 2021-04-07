@@ -71,6 +71,9 @@ let URL = {
   //企业-服务记录-标记班组是否合适
   POST_TEAM_IS_SUIT: "/enterprise/projectRequirement/suit",
 
+  //企业-服务记录-需求引进成功或失败标记
+  POST_PROJECT_RESULT_PUSH: "/enterprise/projectRequirement/recommendStatus",
+
   //企业-服务记录-班组结果上传-班组列表
   POST_TEAM_SUIT_LIST: "/enterprise/projectRequirement/suit/list",
 

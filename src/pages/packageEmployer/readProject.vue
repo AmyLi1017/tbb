@@ -24,8 +24,9 @@
         <div class="contentBox">
             <div class="totalNum">符合条件的班组共计 <span>{{totalNum}}</span> 条</div>
             <teamList :teamsList="teamsList" @click="goDetail"></teamList>
+            <empty v-if="teamsList.length === 0" :title="emptyMessage"></empty>
         </div>
-        <loadMore :status="loadStatus"></loadMore>
+        <loadMore :status="loadStatus" v-if="isLoadMore"></loadMore>
     </div>
 </template>
 
@@ -35,10 +36,11 @@
     import api from '@/net/api'
     import loadMore from '@/components/uni-load-more'
     import teamList from '@/components/teamList'
+    import empty from "../../components/empty";
 
     export default {
         name: "readProject",
-        components: {slFilter,slFilterMulti,loadMore,teamList},
+        components: {slFilter,slFilterMulti,loadMore,teamList,empty},
         data(){
             return {
                 //搜索参数
@@ -59,6 +61,7 @@
                 tipsText: '到底了，不要再拉了',
                 loadStatus:'loading',  //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
                 isLoadMore:false,  //是否加载中
+                emptyMessage: '暂无符合条件的班组',
 
                 teamsList: [],//listData
 
@@ -171,102 +174,29 @@
                 })
             },
             loadProvinces(){
-                //测试数据-----------------------------------------待删除
-                this.provinceList = [
-                    {
-                        text: '云南省',
-                        value: 450000
-                    },
-                    {
-                        text: '浙江省',
-                        value: 651654
-                    }
-                ];
-
-                //获取省份
-                let options = [];
-                let resOptions = [];
-                api.postRegion({level: '',proId: ''}).then(res => {
-                    if (res.messageId == 1000) {
-                        resOptions = res.body;
-                    }
-                });
-
-                //测试数据-----------------------------待注释
-                resOptions = [{
-                    id: 450000, //行政区id
-                    regionName: "云南省", //行政区名称
-                    provinceSimple: "滇", // 省简称
-                    level: 1 //等级:1省,2市,3区县
-                }, {
-                    id: 651654, //行政区id
-                    regionName: "浙江省", //行政区名称
-                    provinceSimple: "浙", // 省简称
-                    level: 1 //等级:1省,2市,3区县
+              //获取省份
+              let _this = this;
+              let options = [{value: '-1',text: '请选择省市'}];
+              let resOptions = [];
+              api.postRegion({level: '1',proId: ''}).then(res => {
+                if (res.messageId == 1000) {
+                  resOptions = res.body;
                 }
-                ];
+                for(let i = 0,len = resOptions.length; i < len; i++) {
+                  let obj = {
+                    value: '',
+                    text: ''
+                  };
+                  obj.value = resOptions[i].id;
+                  obj.text = resOptions[i].regionName;
 
-                for(let i = 0,len=resOptions.length; i < len; i++) {
-                    let obj = {
-                        value: '',
-                        text: ''
-                    };
-                    obj.value = resOptions[i].id;
-                    obj.text = resOptions[i].regionName;
-
-                    options.push(obj)
+                  options.push(obj)
+                  _this.provinceList = options;
                 }
-                console.log('provinceList');
+              });
             },
             loadData(isLoadMore) {
-                //测试数据，带注释 -------------------------------------------------
-                this.teamsList = [{
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    icon: "../pages/packageEmployer/static/img/starUser2.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    provinceName: "重庆市", // 省名称
-                    cityName: "江北区", // 市名称
-                    population: 22, // 队伍人数
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    projectName: "万科西城项目一期土石方", // 最近工程
-                    mainEnterprise: "重庆建工第三建筑有限公司", // 总包单位
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    teamSearchWorkTypeResponseList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ]
-                },{
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    icon: "../pages/packageEmployer/static/img/starUser2.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    provinceName: "重庆市", // 省名称
-                    cityName: "江北区", // 市名称
-                    population: 22, // 队伍人数
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    projectName: "万科西城项目一期土石方", // 最近工程
-                    mainEnterprise: "重庆建工第三建筑有限公司", // 总包单位
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    teamSearchWorkTypeResponseList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ]
-                }];
-
-                console.log(this.teamsList,"this.teamsList");
-
-                if (isLoadMore) {
+              if (isLoadMore) {
                     if (this.isHasMoreData) {
                         this.pageIndex++;
                     } else {
@@ -287,76 +217,63 @@
                     pageSize: '',
                     pageIndex: 1,
                 };
-                console.log(data,'data');
+                let _this = this;
                 api.postTeamsSearch(data).then((res) => {
-                    wx.hideLoading();
+                  wx.hideLoading();
+                  if (res.messageId == 1000){
                     if (res.body.pageTotal == this.pageIndex) {
-                        this.isHasMoreData = false;
-                        this.isLoadMore = true;
-                        this.loadStatus = 'nomore'
+                      _this.isHasMoreData = false;
+                      _this.isLoadMore = true;
+                      _this.loadStatus = 'nomore'
                     } else {
-                        this.isHasMoreData = true;
-                        this.isLoadMore = false
+                      _this.isHasMoreData = true;
+                      _this.isLoadMore = false
                     }
                     let list = res.body.data.map(item => {
-                        return item
+                      return item
                     });
 
                     if (isLoadMore) {
-                        this.teamsList = this.teamsList.concat(list)
+                      _this.teamsList = this.teamsList.concat(list)
                     } else {
-                        wx.pageScrollTo({
-                            scrollTop:0
-                        });
-                        this.teamsList = list
+                      wx.pageScrollTo({
+                        scrollTop:0
+                      });
+                      _this.teamsList = list
                     }
-
-                    this.isSearch = true;
-                    this.totalNum = res.body.total;
-                    console.log(this.teamsList)
+                    _this.isSearch = true;
+                    _this.totalNum = res.body.total;
+                  }else if (res.messageId == 2001){
+                    _this.isLoadMore = false;
+                    _this.loadStatus = '';
+                    _this.teamsList = [];
+                    _this.totalNum = 0
+                  }
                 }).catch(error => {
                     wx.hideLoading();
                     wx.showToast({
                         icon: "none",
-                        title: error
+                        title: '网络错误！'
                     });
-                    this.isLoadMore = false;
-                    this.loadStatus = ''
+                    _this.isLoadMore = false;
+                    _this.loadStatus = '';
+                    _this.teamsList = [];
+                    _this.totalNum = 0
                 });
-
-
-
             },
             loadWorkType(){
-                //测试数据-----------------------------------------待删除
-                this.workerTypeList = [
-                    {
-                        text: '架子工',
-                        value: 0
-                    },
-                    {
-                        text: '抹灰工',
-                        value: 1
-                    },
-                    {
-                        text: '钢筋工',
-                        value: 2
-                    }
-                ]
-
-                console.log(this.workerTypeList,"this.workerTypeList");
-
+                let _this = this;
                 api.getWorkerType().then(res => {
                     if (res.messageId == 1000) {
                         let workerTypes = [];
-                        let body = res.body;
-                        for (let i; i < res.body.length; i++){
+                        let resBody = res.body;
+                        for (let j = 0; j < resBody.length; j++){
                             let obj = {text: '', value: ''};
-                            obj.text = body[i].id;
-                            obj.value = body[i].name;
+                            obj.text = resBody[j].name;
+                            obj.value = resBody[j].id;
                             workerTypes.push(obj);
                         }
-                        _this.workerTypeList.push(workerTypes);
+                        _this.workerTypeList = workerTypes;
                     }
                 })
 
