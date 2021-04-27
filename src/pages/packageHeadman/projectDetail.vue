@@ -51,8 +51,8 @@
         </div>
         <div class="btnBox">
             <div class="left"><a class="button text-space" :class="isActive?'active':''" @click="getTeamPhone">获取联系方式</a></div>
-            <div class="right" v-if="projectData.recommendStatus == 0 && projectData.signStatus == 0"><a class="button text-space" :class="isActive?'active':''" @click="signUp">立即报名</a></div>
-            <div class="right del" v-if="projectData.recommendStatus == 0 && projectData.signStatus == 1"><a class="button text-space" :class="isActive?'active':''">名额已满</a></div>
+            <div class="right" v-if="projectData.recommendStatus == 0 && projectData.issueStatus == 0"><a class="button text-space" :class="isActive?'active':''" @click="signUp">立即报名</a></div>
+            <div class="right del" v-if="projectData.recommendStatus == 0 && projectData.issueStatus == 1"><a class="button text-space" :class="isActive?'active':''">名额已满</a></div>
             <div class="right del" v-if="projectData.recommendStatus != 0"><a class="button text-space" :class="isActive?'active':''">已结束</a></div>
         </div>
     </div>
@@ -213,28 +213,8 @@
                     })
                 });
             },
+            // 获取项目详情
             loadProjectData(){
-                //测试数据-------------------------------待删
-                this.projectData = {
-                    id: "21aasadsfdds", // 项目id
-                    customerId: "21aasadsfddsqwqqw", // 客户id
-                    projectName: "重庆大学科技研究院项目", // 项目名称
-                    provinceId: 410000, // 省id
-                    provinceName: "云南省", // 省名称
-                    cityId: 410100, // 市id
-                    cityName: "昆明市", // 市名称
-                    detailAddr: "重庆医专科技大学校园内", // 详细地址
-                    typeId: 12, // 工程类型id
-                    typeName: "边坡工程", // 工程类型名称
-                    description: "1.抽、排水", // 项目描述
-                    endTime: '2021/01/03', // 截止时间:13位时间戳
-                    createTime: '2020/12/15',
-                    places: 34, // 报名名额
-                    recommendStatus: 0,// 引进状态:0未引进,1成功,2失败
-                    signStatus: 0,//报名状态:0未满,1已满
-                    files: "http://www.baidu.com" // 单个附件地址
-                };
-
                 let data = {
                     id: this.projectId
                 };
@@ -260,9 +240,6 @@
                 });
             },
             loadPublishTimes(){
-                //待注释 ----------------》》
-                this.times = {times: 13};
-                //待注释 ----------------《《
                 let data = {id: this.projectId};
                 api.postProjectPublishTimes(data).then((res) => {
                     if (res.messageId == 1000){
@@ -281,12 +258,6 @@
                 });
             },
             loadAuthor(){
-                //待注释 ----------------》》
-                this.author = {
-                    name: "小飞", // 发布人姓名
-                    enterpriseName: "企业名称************"   // 企业名称
-                };
-                //待注释 ----------------《《
                 let data = {id: this.projectId};
                 api.postProjectAuthor(data).then((res) => {
                     if (res.messageId == 1000){
@@ -305,15 +276,13 @@
                 });
             }
         },
-
         onLoad(){
-            this.isAuthentication = store.state.user.customer.isAuthentication;
-            this.isImg = store.state.user.customer.isImg;
+            this.isAuthentication = store.state.user.isAuthentication;
+            this.isImg = store.state.user.isImg;
             this.projectId = this.$root.$mp.query.id;
             this.loadProjectData();//获取项目信息
             this.loadPublishTimes();//获取浏览次数
             this.loadAuthor();//获取发布人
-
         }
     }
 </script>

@@ -2,12 +2,12 @@
     <div class="container">
         <div class="listBox" v-for="(item,index) in workLists" @click="goToDetail(item.id)">
             <div class="p">
-                <div class="left title">{{item.requirementName}}</div>
+                <div class="left title text-overflow">{{item.requirementName}}</div>
                 <div class="right">{{item.provinceName}}-{{item.cityName}}</div>
             </div>
             <div class="p">
                 <div class="left">{{item.workTypeText}}</div>
-                <div class="right">{{item.salaryMin}}-{{item.salaryMax}}/日</div>
+                <div class="right moneyTips">{{item.salaryMin}}-{{item.salaryMax}}/日</div>
             </div>
             <div class="dis">{{item.description}}</div>
         </div>
@@ -54,6 +54,7 @@
                 }
                 .right{
                     flex: 1;
+                    text-align: right;
                 }
             }
             .dis{

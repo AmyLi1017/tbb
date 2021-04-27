@@ -6,24 +6,28 @@
         </div>
         <div class="listBox">
             <serviceRecordList :listData="listData" :listType="listType" @click="publishStateChange"></serviceRecordList>
+            <empty v-if="isEmpty" :title="emptyTips"></empty>
         </div>
-        <loadMore :status="loadStatus"></loadMore>
+        <loadMore :status="loadStatus" v-if="!isEmpty"></loadMore>
     </div>
 </template>
 
 <script>
     import serviceRecordList from '@/components/employer/service-record-list'
     import loadMore from '@/components/uni-load-more'
+    import empty from "../empty";
     import api from '@/net/api'
 
     export default {
         name: "serviceRecord",
-        components: {serviceRecordList,loadMore},
+        components: {serviceRecordList,loadMore,empty},
         data(){
             return {
                 listType: 1,//1为发布中，0为已截止
                 listData: '',
 
+                isEmpty: false,
+                emptyTips: '您还没有服务记录哦！^-^',
                 pageSize: '',
                 pageIndex: 1,
                 isHasMoreData: false,
@@ -142,48 +146,6 @@
                 }
             },
             loadData(isLoadMore) {
-                //测试数据，带注释 -------------------------------------------------
-                if (this.listType == 1) {
-                    this.listData = [{
-                        id: "1", // 项目id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectName: "项目名项目名项目名项目名1", // 头像
-                        typeName: "边坡工程1", // 项目类型
-                        issueStatus: 0, // 发布状态:0停止发布(发布时间到期或手动截止),1发布中
-                        signPresons: 12,  // 报名人数
-                        recommendStatus: 0
-                    },{
-                        id: "1", // 项目id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectName: "项目名项目名项目名项目名2", // 头像
-                        typeName: "边坡工程2", // 项目类型
-                        issueStatus: 0, // 发布状态:0停止发布(发布时间到期或手动截止),1发布中
-                        signPresons: 12,  // 报名人数
-                        recommendStatus: 1
-                    }
-                    ];
-                }else {
-                    this.listData = [{
-                        id: "1", // 项目id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectName: "项目名项目名项目名项目名3", // 头像
-                        typeName: "边坡工程3", // 项目类型
-                        issueStatus: 0, // 发布状态:0停止发布(发布时间到期或手动截止),1发布中
-                        signPresons: 12,  // 报名人数
-                        recommendStatus: 1
-                    },{
-                        id: "1", // 项目id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectName: "项目名项目名项目名项目名4", // 头像
-                        typeName: "边坡工程4", // 项目类型
-                        issueStatus: 0, // 发布状态:0停止发布(发布时间到期或手动截止),1发布中
-                        signPresons: 12,  // 报名人数
-                        recommendStatus: 0
-                    }
-                    ];
-                }
-
-
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
                         this.pageIndex++;
@@ -193,18 +155,17 @@
                 } else {
                     this.pageIndex = 1
                 }
-
                 let data = {
                     issueStatus: this.listType,
-                    pageSize: '',
-                    pageIndex: 1,
+                    pageSize: 10,
+                    pageIndex: this.pageIndex,
                 };
-
                 let _this = this;
                 api.postServiceRecordList(data).then((res) => {
                     wx.hideLoading();
                     if (res.messageId == 1000){
-                        if (res.body.pageTotal == this.pageIndex) {
+                        this.isEmpty = false;//不为空
+                        if (res.body.data.pageTotal == this.pageIndex) {
                           _this.isHasMoreData = false;
                           _this.isLoadMore = true;
                           _this.loadStatus = 'nomore'
@@ -213,7 +174,6 @@
                           _this.isLoadMore = false
                         }
                         let list = res.body.data;
-                        console.log(list,'list')
                         if (isLoadMore) {
                           _this.listData = _this.listData.concat(list)
                         } else {
@@ -222,11 +182,11 @@
                             });
                           _this.listData = list
                         }
-                    }else {
-                        wx.showToast({
-                            icon: "none",
-                            title: "没有更多数据！"
-                        });
+                    }else if (res.messageId == 2001) {
+                      this.listData = []
+                      this.isEmpty = true;
+                      this.isLoadMore = true;
+                      this.loadStatus = '';
                     }
                 }).catch(error => {
                     wx.hideLoading();
@@ -234,20 +194,21 @@
                         icon: "none",
                         title: "error"
                     });
-                  _this.isLoadMore = false;
+                  _this.isLoadMore = true;
                   _this.loadStatus = ''
                 });
 
             },
         },
+        onReachBottom(){  //上拉触底函数
+          console.log(this.isLoadMore, 'isLoadMore')
+          if(!this.isLoadMore){  //此处判断，上锁，防止重复请求
+            this.isLoadMore = true;
+            this.loadData(true);
+          }
+        },
         mounted(){
             this.loadData();//获取用户发布列表
-        },
-        onReachBottom(){  //上拉触底函数
-            if(!this.isLoadMore){  //此处判断，上锁，防止重复请求
-                this.isLoadMore = true;
-                this.loadData(true);
-            }
         },
     }
 </script>

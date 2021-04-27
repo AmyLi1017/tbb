@@ -2,6 +2,7 @@
     <div class="container">
         <companyServiceRecord v-if="roleType == 0"></companyServiceRecord>
         <teamHeaderServiceRecord v-if="roleType == 1"></teamHeaderServiceRecord>
+        <empty v-if="roleType == 2" :title="emptyTips"></empty>
     </div>
 </template>
 
@@ -9,12 +10,14 @@
     import store from '@/store/index'
     import companyServiceRecord from '@/components/employer/serviceRecord'
     import teamHeaderServiceRecord from '@/components/teamHeader/serviceRecord'
+    import empty from "@/components/empty";
 
   export default {
-    components: {companyServiceRecord,teamHeaderServiceRecord},
+    components: {companyServiceRecord,teamHeaderServiceRecord,empty},
     data() {
       return {
-          roleType: ''
+          roleType: '',
+          emptyTips: '您的服务记录为空！^-^'
       }
     },
     methods: {

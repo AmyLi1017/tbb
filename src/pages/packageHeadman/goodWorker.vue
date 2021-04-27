@@ -21,8 +21,9 @@
         <div class="contentBox">
             <div class="totalNum">符合条件的班组共计 <span>{{totalNum}}</span> 条</div>
             <workerList :workerList="workerList" @click="goDetail"></workerList>
+            <empty v-if="isEmpty" :title="emptyTips"></empty>
         </div>
-        <loadMore :status="loadStatus"></loadMore>
+        <loadMore :status="loadStatus" v-if="!isEmpty"></loadMore>
     </div>
 </template>
 
@@ -31,14 +32,17 @@
     import util from '@/utils/index'
     import store from '@/store/index'
     import loadMore from '@/components/uni-load-more'
+    import empty from '@/components/empty'
     import slFilter from '@/components/teamHeader/sl-filter-good-worker'
     import workerList from '@/components/teamHeader/worker-list'
 
     export default {
         name: "goodWorker",
-        components: {loadMore,slFilter,workerList},
+        components: {loadMore,slFilter,workerList, empty},
         data(){
             return {
+                emptyTips: "列表为空，请试试其他筛选哦！",
+                isEmpty: false,
                 isAuthentication: '',//是否实名
                 isImg: '',//班组是否有图
                 //搜索参数
@@ -161,96 +165,33 @@
                 //筛选搜索
                 this.doSearch();
             },
-
             //跳转到工人名片
-            goDetail(id){
+            goDetail(id, customerId){
                 uni.navigateTo({
-                    url: "/pages/packageHeadman/workerCard?id=" + id
+                    url: "/pages/packageHeadman/workerCard?id=" + id + '&&customerId=' + customerId
                 })
             },
-
             loadProvinces(){
-                //测试数据-----------------------------------------待删除
-                this.provinceList = [
-                    {
-                        text: '云南省',
-                        value: 450000
-                    },
-                    {
-                        text: '浙江省',
-                        value: 651654
-                    }
-                ];
-
                 //获取省份
                 let options = [];
                 let resOptions = [];
-                api.postRegion({level: '',proId: ''}).then(res => {
+                api.postRegion({level: '1',proId: ''}).then(res => {
                     if (res.messageId == 1000) {
                         resOptions = res.body;
+                      for(let i = 0,len=resOptions.length; i < len; i++) {
+                        let obj = {
+                          value: '',
+                          text: ''
+                        };
+                        obj.value = resOptions[i].id;
+                        obj.text = resOptions[i].regionName;
+                        options.push(obj)
+                      }
+                      this.provinceList = options
                     }
                 });
-
-                //测试数据-----------------------------待注释
-                resOptions = [{
-                    id: 450000, //行政区id
-                    regionName: "云南省", //行政区名称
-                    provinceSimple: "滇", // 省简称
-                    level: 1 //等级:1省,2市,3区县
-                }, {
-                    id: 651654, //行政区id
-                    regionName: "浙江省", //行政区名称
-                    provinceSimple: "浙", // 省简称
-                    level: 1 //等级:1省,2市,3区县
-                }
-                ];
-
-                for(let i = 0,len=resOptions.length; i < len; i++) {
-                    let obj = {
-                        value: '',
-                        text: ''
-                    };
-                    obj.value = resOptions[i].id;
-                    obj.text = resOptions[i].regionName;
-
-                    options.push(obj)
-                }
-                console.log('provinceList');
             },
             loadData(isLoadMore) {
-                //测试数据，带注释 -------------------------------------------------
-                this.workerList = [{
-                    id: "1sdsewwewqqwasweew", // 客户id
-                    workerId: "1sdsewwewqqwasweew", // 工人id
-                    icon: "http://wee..cdssd", // 头像地址
-                    name: "小飞",   // 姓名
-                    isAuthentication: 0,  // 是否实名:0否,1是
-                    provinceId: 140000,  // 省id
-                    provinceName: "重庆市",   // 省名称
-                    cityId: 140100,  // 市id
-                    cityName: "渝北区",  // 市名称
-                    applyStatus: 1,  // 求职状态:0未知,1找工作中,2观察中
-                    workYear: 11,   // 工龄
-                    workType: "架子工",  // 工种
-                    description: "工人简介"  // 工人简介
-                    },{
-                    id: "1sdsewwewqqwasweew", // 客户id
-                    workerId: "1sdsewwewqqwasweew", // 工人id
-                    icon: "http://wee..cdssd", // 头像地址
-                    name: "小飞",   // 姓名
-                    isAuthentication: 0,  // 是否实名:0否,1是
-                    provinceId: 140000,  // 省id
-                    provinceName: "重庆市",   // 省名称
-                    cityId: 140100,  // 市id
-                    cityName: "渝北区",  // 市名称
-                    applyStatus: 1,  // 求职状态:0未知,1找工作中,2观察中
-                    workYear: 11,   // 工龄
-                    workType: "架子工",  // 工种
-                    description: "工人简介"  // 工人简介
-                }
-                ];
-
-
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
                         this.pageIndex++;
@@ -260,7 +201,6 @@
                 } else {
                     this.pageIndex = 1
                 }
-
                 let data = {
                     keyWord: this.keyWord,
                     applyStatus: this.applyStatus,
@@ -269,86 +209,72 @@
                     workYearMin: this.workYearMin,
                     workYearMax: this.workYearMax,
                     workType: this.workType,
-                    pageSize: '',
-                    pageIndex: 1,
+                    pageSize: 20,
+                    pageIndex: this.pageIndex,
                 };
-                console.log(data,'data');
+                let _this = this;
                 api.postGoodWorkerList(data).then((res) => {
                     wx.hideLoading();
-                    if (res.body.pageTotal == this.pageIndex) {
+                    if (res.messageId == '1000' ) {
+                      this.isEmpty = false;//不为空
+                      if (res.body.pageTotal == this.pageIndex) {
                         this.isHasMoreData = false;
                         this.isLoadMore = true;
                         this.loadStatus = 'nomore'
-                    } else {
+                      } else {
                         this.isHasMoreData = true;
                         this.isLoadMore = false
-                    }
-                    // let list = res.body.data.map(item => {
-                    //     item.companyName = utils.replaceFont(item.companyName)
-                    //     if (item.lastBidTime){
-                    //         item.lastBidTime = dayjs(item.lastBidTime).format("YYYY/MM/DD")
-                    //     }
-                    //     return item
-                    // });
-
-                    if (isLoadMore) {
+                      }
+                      let list = res.body.data.map(item => {
+                        if (item.lastBidTime){
+                          item.lastBidTime = util.format(item.lastBidTime,"YYYY/MM/DD")
+                        }
+                        item.workerType = ''
+                        if (item.workerWorkTypeList.length > 0) {
+                          item.workerWorkTypeList.forEach((i, num) => {
+                            if (num === item.workerWorkTypeList.length - 1) {
+                              item.workerType += i.workTypeName
+                            }else {
+                              item.workerType += i.workTypeName + '、'
+                            }
+                          })
+                        }
+                        return item
+                      });
+                      if (isLoadMore) {
                         this.workerList = this.workerList.concat(list)
-                    } else {
+                      } else {
                         wx.pageScrollTo({
-                            scrollTop:0
+                          scrollTop:0
                         });
                         this.workerList = list
+                      }
+                      this.isSearch = true;
+                      this.totalNum = res.body.total;
+                    }else if (res.messageId == 2001) {
+                      this.workerList = []
+                      this.totalNum = 0
+                      this.isEmpty = true;
+                      this.isLoadMore = false;
+                      this.loadStatus = '';
                     }
-
-                    this.isSearch = true;
-                    this.totalNum = res.body.total;
-
-                }).catch(error => {
-                    wx.hideLoading();
-                    wx.showToast({
-                        icon: "none",
-                        title: error
-                    });
-                    this.isLoadMore = false;
-                    this.loadStatus = ''
-                });
-
-
-
+                })
             },
             loadWorkType(){
-                //测试数据-----------------------------------------待删除
-                this.workerTypeList = [
-                    {
-                        text: '架子工',
-                        value: 0
-                    },
-                    {
-                        text: '抹灰工',
-                        value: 1
-                    },
-                    {
-                        text: '钢筋工',
-                        value: 2
-                    }
-                ]
-
-                console.log(this.workerTypeList,"this.workerTypeList");
-
+                let _this = this;
                 api.getWorkerType().then(res => {
                     if (res.messageId == 1000) {
                         let workerTypes = [];
                         let body = res.body;
-                        for (let i; i < res.body.length; i++){
+                        for (let i = 0; i < res.body.length; i++){
                             let obj = {text: '', value: ''};
-                            obj.text = body[i].id;
-                            obj.value = body[i].name;
+                            obj.text = body[i].name;
+                            obj.value = body[i].id;
                             workerTypes.push(obj);
                         }
-                        _this.workerTypeList.push(workerTypes);
+                        _this.workerTypeList = workerTypes;
                     }
                 })
-
             }
         },
         onLoad(){

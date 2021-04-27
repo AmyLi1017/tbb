@@ -4,24 +4,23 @@
             <div class="content" @click="goToDetail(item.id)">
                 <div class="box">
                     <div class="item bold">{{item.projectName}}</div>
-                    <div class="item rt">{{item.provinceName}}-{{item.cityName}}</div>
+                    <div class="item rt">{{item.provinceName}}<span v-if="item.cityName">-{{item.cityName}}</span></div>
                 </div>
                 <div class="box">
                     <div class="item del">{{item.typeName}}</div>
                     <div class="item rt del">{{item.endTime}}</div>
                 </div>
                 <div class="box">
-                    <div class="item del" v-if="item.recommendStatus == 0">已有{{item.signPerson}}人报名</div>
-                    <div class="item del" v-if="item.recommendStatus == 1 || item.recommendStatus == 2">共有{{item.signPerson}}人报名</div>
-                    <div class="item rt del" v-if="item.signStatus == 0">报名未满</div>
-                    <div class="item rt del" v-if="item.signStatus == 1">报名已满</div>
+                    <div class="item del" v-if="item.issueStatus == 0">已有{{item.signPerson?item.signPerson:0}}人报名</div>
+                    <div class="item del" v-if="item.issueStatus == 1">共有{{item.signPerson?item.signPerson:0}}人报名</div>
+                    <div class="item rt del" v-if="item.issueStatus == 0">报名未满</div>
+                    <div class="item rt del" v-if="item.issueStatus == 1">报名已满</div>
                 </div>
             </div>
             <div class="btnBox">
-                <div class="item">{{item.name}}</div>
-                <div class="itemS">{{item.enterpriseName}}</div>
-                <div class="item rt" v-if="item.signStatus == 0 && item.recommendStatus == 0" @click="signUp(item.id)">立即报名</div>
-                <div class="item rt del" v-if="item.recommendStatus == 1 || item.recommendStatus == 2">已结束</div>
+                <div class="item">{{item.name?item.name:''}}</div>
+                <div class="itemS">{{item.enterpriseName?item.enterpriseName:''}}</div>
+                <div class="item rt" v-if="item.issueStatus == 0" @click="signUp(item.id)">立即报名</div>
             </div>
         </div>
     </div>

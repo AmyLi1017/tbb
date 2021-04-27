@@ -157,7 +157,6 @@
                     })
                 });
             },
-
             onSearchChange() {
                 wx.showLoading({
                     title: '正在搜索'
@@ -210,127 +209,47 @@
                 //筛选搜索
                 this.doSearch();
             },
-
+            //获取省份
             loadProvinces(){
-                //测试数据-----------------------------------------待删除
-                this.provinceList = [
-                    {
-                        text: '云南省',
-                        value: 450000
-                    },
-                    {
-                        text: '浙江省',
-                        value: 651654
-                    }
-                ];
-
-                //获取省份
                 let options = [];
                 let resOptions = [];
-                api.postRegion({level: '',proId: ''}).then(res => {
+                let _this = this;
+                api.postRegion({level: '1',proId: ''}).then(res => {
                     if (res.messageId == 1000) {
                         resOptions = res.body;
+                      for(let i = 0,len = resOptions.length; i < len; i++) {
+                        let obj = {
+                          value: '',
+                          text: ''
+                        };
+                        obj.value = resOptions[i].id;
+                        obj.text = resOptions[i].regionName;
+                        options.push(obj)
+                      }
+                      _this.provinceList = options;
                     }
                 });
-
-                //测试数据-----------------------------待注释
-                resOptions = [{
-                    id: 450000, //行政区id
-                    regionName: "云南省", //行政区名称
-                    provinceSimple: "滇", // 省简称
-                    level: 1 //等级:1省,2市,3区县
-                }, {
-                    id: 651654, //行政区id
-                    regionName: "浙江省", //行政区名称
-                    provinceSimple: "浙", // 省简称
-                    level: 1 //等级:1省,2市,3区县
-                }
-                ];
-
-                for(let i = 0,len=resOptions.length; i < len; i++) {
-                    let obj = {
-                        value: '',
-                        text: ''
-                    };
-                    obj.value = resOptions[i].id;
-                    obj.text = resOptions[i].regionName;
-
-                    options.push(obj)
-                }
-                console.log('provinceList');
             },
+            // 获取工程类型
             loadProjectType(){
-                //测试数据-----------------------------------------待删除
-                this.projectTypes = [
-                    {
-                        text: '边坡工程',
-                        value: 0
-                    },
-                    {
-                        text: '土方工程',
-                        value: 1
-                    },
-                    {
-                        text: '勘测工程',
-                        value: 2
-                    }
-                ];
-
-
+              let _this = this;
                 api.getProjectType().then(res => {
                     if (res.messageId == 1000) {
                         let projectTypes = [];
                         let body = res.body;
-                        for (let i; i < res.body.length; i++){
-                            let obj = {text: '', value: ''};
-                            obj.text = body[i].id;
-                            obj.value = body[i].name;
+                        for (let i = 0; i < res.body.length; i++){
+                            let obj = {};
+                            obj.text = body[i].name;
+                            obj.value = body[i].id;
                             projectTypes.push(obj);
                         }
-                        _this.projectTypes.push(projectTypes);
+                        _this.projectTypes = projectTypes;
                     }
                 })
-
             },
+            // 获取list数据
             loadData(isLoadMore) {
-                //测试数据，带注释 -------------------------------------------------
-                this.projectList = [{
-                    id: "1sdsewwewqqwasweew", // 企业发布(班组引进)项目需求id
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    projectName: '万科上城2期项目',
-                    provinceId: 140000,  // 省id
-                    provinceName: "重庆市",   // 省名称
-                    cityId: 140100,  // 市id
-                    cityName: "渝北区",  // 市名称
-                    typeId: 12,  // 项目类型id
-                    typeName: "边坡工程",   // 项目类型名称
-                    endTime: 1232444343435,  // 截止时间:13位时间戳
-                    signPerson: 1, // 报名人数
-                    signStatus: 0, // 报名状态:0未满,1已满
-                    recommendStatus: 0,// 引进状态:0未引进,1成功,2失败
-                    name: "小飞",  // 发布人名称
-                    enterpriseName: "企业名称"   // 企业名称
-                },{
-                    id: "1sdsewwewqqwasweew", // 企业发布(班组引进)项目需求id
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    projectName: '万科上城3期项目',
-                    provinceId: 140000,  // 省id
-                    provinceName: "重庆市",   // 省名称
-                    cityId: 140100,  // 市id
-                    cityName: "渝北区",  // 市名称
-                    typeId: 12,  // 项目类型id
-                    typeName: "边坡工程2",   // 项目类型名称
-                    endTime: 1232444343435,  // 截止时间:13位时间戳
-                    signPerson: 1, // 报名人数
-                    signStatus: 0, // 报名状态:0未满,1已满
-                    recommendStatus: 2,// 引进状态:0未引进,1成功,2失败
-                    name: "小飞",  // 发布人名称
-                    enterpriseName: "企业名称dsfasfdf"   // 企业名称
-                }
-            ];
-                this.totalNum = 2;
-
-
+              console.log(isLoadMore, this.isHasMoreData)
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
                         this.pageIndex++;
@@ -340,7 +259,6 @@
                 } else {
                     this.pageIndex = 1
                 }
-
                 let data = {
                     keyWord: this.keyWord,
                     typeId: this.typeId,
@@ -348,10 +266,9 @@
                     cityId: this.cityId,
                     endTimeStart: this.endTimeStart,
                     endTimeEnd: this.endTimeEnd,
-                    pageSize: '',
-                    pageIndex: 1,
+                    pageSize: 20,
+                    pageIndex: this.pageIndex,
                 };
-                console.log(data,'data');
                 api.postProjectSearch(data).then((res) => {
                     wx.hideLoading();
                     if (res.body.pageTotal == this.pageIndex) {
@@ -368,7 +285,6 @@
                         }
                         return item
                     });
-
                     if (isLoadMore) {
                         this.projectList = this.projectList.concat(list)
                     } else {
@@ -377,10 +293,8 @@
                         });
                         this.projectList = list
                     }
-
                     this.isSearch = true;
                     this.totalNum = res.body.total;
-
                 }).catch(error => {
                     wx.hideLoading();
                     wx.showToast({
@@ -394,12 +308,14 @@
             },
         },
         onLoad() {
-            this.isAuthentication = store.state.user.customer.isAuthentication;
-            this.isImg = store.state.user.customer.isImg;
+            this.isAuthentication = store.state.user.isAuthentication;
+            this.isImg = store.state.user.isImg;
             // 调用应用实例的方法获取全局数据
             this.loadData(false);
-            this.loadProvinces();//获取省市
-            this.loadProjectType();//获取工程类型
+            //获取省市
+            this.loadProvinces();
+            //获取工程类型
+            this.loadProjectType();
         },
         onReachBottom(){  //上拉触底函数
             if(!this.isLoadMore){  //此处判断，上锁，防止重复请求
@@ -414,7 +330,7 @@
     @import "../../assets/base";
     .container{
         letter-spacing: 1px;
-        padding-bottom: 500px;
+        padding-bottom: 50px;
         .search{
             text-align: center;
             padding-top: 20px;
@@ -450,7 +366,6 @@
                 color: @delColor;
             }
         }
-
         .selBox{
             display: flex;
             flex-flow: row;
@@ -463,7 +378,6 @@
                 box-sizing: border-box;
             }
         }
-
         .contentBox{
             margin: 10px 0;
             .totalNum{

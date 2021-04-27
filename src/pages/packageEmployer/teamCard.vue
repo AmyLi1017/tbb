@@ -52,33 +52,9 @@
                 loadStatus:'loading',  //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
                 isLoadMore:false,  //是否加载中
 
-                info1: {
-                    id: "1sdsewweweew", // 客户id，32位字符串
-                    icon: "../../pages/packageEmployer/static/img/starUser1.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    sex: 1, // 性别:0女,1男,2未知
-                    age: 23, // 年龄
-                    nationName: '汉族',
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                },
-                info2: {
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    workYear: 12, // 工作年限
-                    position: 1, // 身份:0未知,1班组长/承包人
-                    workTypeList: "抹灰工、钢筋工",
-                    population: 23, // 队伍人数
-                    description: "从业20多年，专业承包各类工程", // 自我介绍
-                    provinceName: '重庆市',
-                    cityName: '江北区'
-                    },
-                baseInfo1: {
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    commitment: "本人及团队以诚信为本，以质量求生存，安全质量进度同时抓", // 信用承诺
-                    financial_status: 1, // 财务状况:0未知,1良好,2一般
-                    files: [] // 材料证明:图片链接数组字符串
-                },
+                info1: {},
+                info2: {},
+                baseInfo1: {},
                 baseInfo2: [],
                 applyStatus: 1,
                 inviteListTotal: 0,
@@ -111,9 +87,6 @@
                             });
                         }
                     });
-                    wx.makePhoneCall({
-                        phoneNumber: this.phone //仅为示例，并非真实的电话号码
-                    })
                 }else {
                     uni.showToast({
                         title: '请先实名，实名后可查看班组联系方式！',

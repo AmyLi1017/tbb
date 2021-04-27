@@ -97,40 +97,25 @@
                 //获取省份
                 let options = [{id: '-1',name: '请选择省市'}];
                 let resOptions = [];
-                api.postRegion({level: '',proId: ''}).then(res => {
+                api.postRegion({level: '1',proId: ''}).then(res => {
                     if (res.messageId == 1000) {
                         resOptions = res.body;
+                      for(let i = 0,len=resOptions.length; i < len; i++) {
+                        let obj = {
+                          id: '',
+                          name: '',
+                          provinceSimple: '',
+                          level: ''
+                        };
+                        obj.id = resOptions[i].id;
+                        obj.name = resOptions[i].regionName;
+                        obj.provinceSimple = resOptions[i].provinceSimple;
+                        obj.level = resOptions[i].level;
+
+                        options.push(obj)
+                      }
                     }
                 });
-
-                //测试数据-----------------------------待注释
-                resOptions = [{
-                    "id": 450000, //行政区id
-                    "regionName": "云南省", //行政区名称
-                    "provinceSimple": "滇", // 省简称
-                    "level": 1 //等级:1省,2市,3区县
-                }, {
-                    "id": 651654, //行政区id
-                    "regionName": "浙江省", //行政区名称
-                    "provinceSimple": "浙", // 省简称
-                    "level": 1 //等级:1省,2市,3区县
-                }
-                ];
-
-                for(let i = 0,len=resOptions.length; i < len; i++) {
-                    let obj = {
-                        id: '',
-                        name: '',
-                        provinceSimple: '',
-                        level: ''
-                    };
-                    obj.id = resOptions[i].id;
-                    obj.name = resOptions[i].regionName;
-                    obj.provinceSimple = resOptions[i].provinceSimple;
-                    obj.level = resOptions[i].level;
-
-                    options.push(obj)
-                }
                 this.proArr = options;
                 return options;
             },
@@ -139,7 +124,6 @@
         methods: {
             //交互
             onProChange(e){
-                console.log(e);
                 this.proId = e.id;
                 this.proName = e.name;
                 this.proLevel = e.level;
@@ -147,55 +131,24 @@
                 let options = [{id: '-1',name: '请选择区县'}];
                 let resOptions = [];
                 if (this.proId !== -1 && this.proLevel < 3) {
-                    api.postRegion({level: this.proLevel,proId: this.proId}).then(res => {
+                    api.postRegion({level: '',proId: this.proId}).then(res => {
                         if (res.messageId == 1000) {
                             resOptions = res.body;
+                          for(let i = 0,len = resOptions.length; i < len; i++) {
+                            let obj = {
+                              id: '',
+                              name: '',
+                              provinceSimple: '',
+                              level: ''
+                            };
+                            obj.id = resOptions[i].id;
+                            obj.name = resOptions[i].regionName;
+                            obj.provinceSimple = resOptions[i].provinceSimple;
+                            obj.level = resOptions[i].level;
+                            options.push(obj)
+                          }
                         }
                     });
-
-                    //测试数据-----------------------------待注释
-                    if (this.proId == 450000){
-                        resOptions = [{
-                            "id": 450100, //行政区id
-                            "regionName": "昆明市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }, {
-                            "id": 450200, //行政区id
-                            "regionName": "玉溪市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }];
-                    }
-                    if (this.proId == 651654) {
-                        resOptions = [{
-                            "id": 651100, //行政区id
-                            "regionName": "杭州市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }, {
-                            "id": 651200, //行政区id
-                            "regionName": "义乌市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }];
-                    }
-
-
-                    for(let i = 0,len=resOptions.length; i < len; i++) {
-                        let obj = {
-                            id: '',
-                            name: '',
-                            provinceSimple: '',
-                            level: ''
-                        };
-                        obj.id = resOptions[i].id;
-                        obj.name = resOptions[i].regionName;
-                        obj.provinceSimple = resOptions[i].provinceSimple;
-                        obj.level = resOptions[i].level;
-
-                        options.push(obj)
-                    }
                     this.citiesArr = options;
                     this.cityId = '-1';
                     this.cityName = "请选择区县";
@@ -354,20 +307,23 @@
                         });
                     });
                 } else {//修改
+                    data.id = this.id;
                     api.postWorkerRequirementEdit(data).then(res => {
                         if (res.messageId == 1000) {
                             wx.showToast({
                                 title: '发布成功！',
                                 icon: 'none',
-                                duration: 2000
+                                duration: 600
                             });
-                            this.isActive = true;
-                            wx.navigateBack({
+                            setTimeout(function (){
+                              this.isActive = true;
+                              wx.navigateBack({
                                 delta: 1,
                                 success: function () {
-                                    getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
+                                  getCurrentPages()[0].onShow(); // 执行前一个页面的onLoad方法
                                 }
-                            });
+                              });
+                            },2000)
                         }else {
                             wx.showToast({
                                 title: '发布失败，请重试！',
@@ -383,14 +339,6 @@
                         });
                     });
                 }
-
-                //待注释------------------------------------------
-                wx.navigateBack({
-                    delta: 1,
-                    success: function () {
-                        getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
-                    }
-                });
             },
 
             //获取数据
@@ -398,110 +346,69 @@
                 //获取表单回显
                 api.postWorkerRequirementGet({id: this.id}).then(res => {
                     if (res.messageId == 1000) {
-                        resOptions = res.body;
+                      let body = res.body;
+                      this.requirementName = body.requirementName;
+                      this.salaryMin = body.salaryMin;
+                      this.salaryMax = body.salaryMax;
+                      this.contactPerson = body.contactPerson;
+                      this.contactPhone = body.contactPhone;
+                      this.personNumber = body.personNumber;
+                      this.description = body.description;
+                      this.proId = body.provinceId;
+                      let obj = {
+                        id: body.provinceId,
+                        name: body.provinceName,
+                        level: 2
+                      };
+                      this.onProChange(obj);
+                      this.cityId = body.cityId;
+                      this.cityName = body.cityName;
+
+                      this.checkedArr = [];
+                      for (let k = 0; k < body.workType.length; k++){
+                        let obj = {
+                          value: '',
+                          name: '',
+                          checked: true
+                        };
+                        obj.value = body.workType[k].workTypeId;
+                        obj.name = body.workType[k].workTypeName;
+                        this.checkedArr.push(obj);
+                      }
+                      this.workText = '';
+                      for (let j = 0; j < body.workType.length; j++){
+                        let item = body.workType[j];
+                        if (j == body.workType.length-1) {
+                          this.workText += item.workTypeName;
+                        }else {
+                          this.workText += item.workTypeName + '、';
+                        }
+                      }
                     }
                 });
-                //待注释-------------------------------------
-                let body = {
-                    requirementName: '招抹灰工、木工若干，待遇从优，日结！',//标题
-                    salaryMin: '200',//最低薪资
-                    salaryMax: '1000',//最高薪资
-                    contactPerson: '张飞',//联系人
-                    contactPhone: '13565429561',//联系电话
-                    personNumber: '10',//招聘人数
-                    description: '1.两年以上经验 2.50岁以下 3.有证书优先',//招聘介绍
-                    provinceId: "450000",
-                    provinceName: '云南省',
-                    cityId: '450100',
-                    cityName: '昆明市',
-                    workType: [  // 招聘工种数组
-                        {
-                            workTypeId:4,
-                            workTypeName:"钢筋工"
-                        },
-                        {
-                            workTypeId:5,
-                            workTypeName:"水泥工"
-                        }
-                    ],
-                };
-                this.requirementName = body.requirementName;
-                this.salaryMin = body.salaryMin;
-                this.salaryMax = body.salaryMax;
-                this.contactPerson = body.contactPerson;
-                this.contactPhone = body.contactPhone;
-                this.personNumber = body.personNumber;
-                this.description = body.description;
-                this.proId = body.provinceId;
-                let obj = {
-                    id: body.provinceId,
-                    name: body.provinceName,
-                    level: 2
-                };
-                this.onProChange(obj);
-                this.cityId = body.cityId;
-                this.cityName = body.cityName;
-
-                this.checkedArr = [];
-                for (let k = 0; k < body.workType.length; k++){
-                    let obj = {
-                        value: '',
-                        name: '',
-                        checked: true
-                    };
-                    obj.value = body.workType[k].workTypeId;
-                    obj.name = body.workType[k].workTypeName;
-                    this.checkedArr.push(obj);
-                }
-                this.workText = '';
-                for (let j = 0; j < body.workType.length; j++){
-                    let item = body.workType[j];
-                    if (j == body.workType.length-1) {
-                        this.workText += item.workTypeName;
-                    }else {
-                        this.workText += item.workTypeName + '、';
-                    }
-                }
-
             },
             getWorkType(){
                 let options = [];
                 api.getWorkerType().then(res => {
                     if (res.messageId == 1000) {
-                        options = res.body;
+                      options = res.body;
+                      this.workType = [];
+                      for (let k = 0; k < options.length; k++){
+                        let obj = {
+                          value: '',
+                          name: '',
+                          checked: false
+                        };
+                        obj.value = options[k].id;
+                        obj.name = options[k].name;
+                        this.workType.push(obj)
+                      }
                     }
                 });
-                //测试数据-----------------------------待注释
-                options = [{
-                    id: 2, // 工种id
-                    name: "架子工", // 工种名称
-                },{
-                    id: 3, // 工种id
-                    name: "抹灰工", // 工种名称
-                }, {
-                    id: 4, // 工种id
-                    name: "钢筋工", // 工种名称
-                }, {
-                    id: 5, // 工种id
-                    name: "水泥工", // 工种名称
-                }
-                ];
-                this.workType = [];
-                for (let k = 0; k < options.length; k++){
-                    let obj = {
-                        value: '',
-                        name: '',
-                        checked: false
-                    };
-                    obj.value = options[k].id;
-                    obj.name = options[k].name;
-                    this.workType.push(obj)
-                }
             }
         },
         onLoad(){
             this.id = this.$root.$mp.query.id;
-            console.log(this.id,'thisId');
             this.getWorkType();
             if (!this.id){
                 this.saveType = 0;//新增
@@ -542,6 +449,7 @@
                     flex: 5;
                     padding-left: 10px;
                     box-sizing: border-box;
+                    text-align: right;
                 }
             }
         }

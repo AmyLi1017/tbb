@@ -4,7 +4,7 @@
             <div class="top">
                 <div class="left">
                     <div class="title">{{workData.requirementName}}</div>
-                    <div>{{workData.salaryMin}}-{{workData.salaryMax}}/日</div>
+                    <div class="moneyTips">{{workData.salaryMin}}-{{workData.salaryMax}}/日</div>
                     <div>招聘人数：{{workData.personNumber}}人</div>
                 </div>
                 <div class="right">
@@ -13,18 +13,18 @@
                 </div>
             </div>
             <div class="p">
-                <div class="lf">发布时间：2020-12-30</div>
-                <div class="rt">浏览次数：50次</div>
+                <div class="lf">发布时间：{{ workData.refreshTime?workData.refreshTime: '' }}</div>
+                <div class="rt">浏览次数：{{ workData.browseNumber?workData.browseNumber : '0' }}次</div>
             </div>
         </div>
         <div class="bottom">
             <div class="p">
                 <div class="text">工作地区：</div>
-                <div class="val">{{workData.provinceName}}{{workData.cityName}}</div>
+                <div class="val">{{workData.provinceName}}<span v-if="workData.cityName">-{{workData.cityName}}</span></div>
             </div>
             <div class="p">
                 <div class="text">发 布 人：</div>
-                <div class="val">张总</div>
+                <div class="val">{{ workData.name }}</div>
             </div>
             <div class="p">
                 <div class="text">招聘工种：</div>
@@ -44,6 +44,7 @@
 <script>
     import api from '@/net/api'
     import store from '@/store/index'
+    import util from '../../utils/index.js'
 
     export default {
         name: "workDetail",
@@ -66,13 +67,15 @@
                         cancelColor: '#AC9BA8',
                         success (res) {
                             if (res.confirm) {
-                                let data = {id: this.customerId};
+                                let data = {id: _this.id};
                                 api.postCustomerPhone(data).then(res => {
                                     if (res.messageId == 1000) {
+                                      if (res.body.phone) {
                                         _this.phone = res.body.phone;
                                         wx.makePhoneCall({
-                                            phoneNumber: res.body.phone //仅为示例，并非真实的电话号码
+                                          phoneNumber: res.body.phone
                                         })
+                                      }
                                     }else {
                                         uni.showToast({
                                             title: res.zhError,
@@ -80,9 +83,6 @@
                                         });
                                     }
                                 });
-                                wx.makePhoneCall({
-                                    phoneNumber: _this.phone //仅为示例，并非真实的电话号码
-                                })
                             } else if (res.cancel) {
                                 console.log('用户点击取消')
                             }
@@ -98,48 +98,22 @@
                 }
             },
             loadData(){
-                //测试数据，待删除-------------->>
-                this.workData = {
-                    id: "1sdsewwewqqwasweew", // 班组招工需求id
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    requirementName: "招聘名称", // 招聘名称
-                    provinceId: 120000, // 省id
-                    provinceName: "北京市", // 省名称
-                    cityId: 120100, // 市id
-                    cityName: "东城区", // 市名称
-                    salaryMin: 1, // 最低薪资
-                    salaryMax: 100, // 最高薪资
-                    contactPerson: "小飞", // 联系人
-                    contactPhone: "15068749417",   // 联系电话
-                    personNumber:1,   // 招聘人数
-                    description:1,   // 招聘描述
-                    workTypeText: '钢筋工、水泥工',
-                    workType: [  // 招聘工种数组
-                        {
-                            workTypeId:1221,
-                            workTypeName:"钢筋工"
-                        },
-                        {
-                            workTypeId:121,
-                            workTypeName:"水泥工"
-                        }
-                    ]
-                    };
-                //测试数据，待删除--------------<<
-
                 let data = {id: this.id};
                 let _this = this;
                 api.postWorkerRequirementGet(data).then((res) => {
                     if (res.messageId == 1000) {
                         _this.workData = res.body;
-                        if (res.body.workType) {
-                            res.body.workType.forEach((item,index) => {
-                                if (index == res.body.workType.lenbits - 1) {
+                        _this.workData.workTypeText = ''
+                      if (res.body.refreshTime) {
+                        _this.workData.refreshTime = util.formatTime(res.body.refreshTime)
+                      }
+                        if (res.body.workerRequirementWorkTypeList) {
+                            res.body.workerRequirementWorkTypeList.forEach((item,index) => {
+                                if (index == res.body.workerRequirementWorkTypeList.length - 1) {
                                     _this.workData.workTypeText += item.workTypeName
                                 }else {
                                     _this.workData.workTypeText += item.workTypeName + '、'
                                 }
-
                             })
                         }
                     }else {
@@ -159,7 +133,7 @@
             }
         },
         onLoad(){
-            this.isAuthentication = store.state.user.customer.isAuthentication;
+            this.isAuthentication = store.state.user.isAuthentication;
             this.id = this.$root.$mp.query.id;
             this.loadData();//获取招工信息
         }

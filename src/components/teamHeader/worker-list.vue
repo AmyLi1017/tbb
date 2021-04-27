@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <div class="listBox" v-for="(item,index) in workerList" @click="goToDetail(item.id)">
+        <div class="listBox" v-for="(item,index) in workerList" @click="goToDetail(item.id,item.customerId)">
             <div class="content">
-                <div class="lf"><img src="../../static/imgs/starUser2.jpg" mode="widthFix" alt=""></div>
+                <div class="lf"><img :src="item.icon?item.icon:''" mode="widthFix" alt=""></div>
                 <div class="rt">
                     <div class="lf">
                         <div class="p title">
@@ -15,11 +15,11 @@
                         </div>
                         <div class="p">
                             <div class="lf">工种</div>
-                            <div class="rt">{{item.workType}}</div>
+                            <div class="rt">{{item.workerType}}</div>
                         </div>
                     </div>
                     <div class="right">
-                        <div>{{item.provinceName}}-{{item.cityName}}</div>
+                        <div>{{item.provinceName}}<span v-if="item.cityName">-{{item.cityName}}</span></div>
                         <div v-if="item.applyStatus == 1">正在找活</div>
                     </div>
                 </div>
@@ -38,8 +38,8 @@
             workerList: ''
         },
         methods: {
-            goToDetail(id){
-                this.$emit('click',id)
+            goToDetail(id,customerId){
+                this.$emit('click',id,customerId)
             }
         }
     }
@@ -90,7 +90,12 @@
                                 flex: 1;
                             }
                             .rt{
-                                flex: 1;
+                                flex: 2;
+                                display: -webkit-box;
+                                -webkit-line-clamp: 1;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                -webkit-box-orient: vertical;
                             }
                         }
                         .title{

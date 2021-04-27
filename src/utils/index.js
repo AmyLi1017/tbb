@@ -26,19 +26,26 @@ function replaceFont(str){
     return str.replace(/font/g,"label");//去掉所有的html标记
 }
 
-export function formatTime(date) {
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
+export function formatTime(date,type) {
+    let dateNew = new Date(date)
+    const year = dateNew.getFullYear()
+    const month = dateNew.getMonth() + 1
+    const day = dateNew.getDate()
 
-    const hour = date.getHours()
-    const minute = date.getMinutes()
-    const second = date.getSeconds()
+    const hour = dateNew.getHours()
+    const minute = dateNew.getMinutes()
+    const second = dateNew.getSeconds()
 
     const t1 = [year, month, day].map(formatNumber).join('/')
     const t2 = [hour, minute, second].map(formatNumber).join(':')
 
-    return `${t1} ${t2}`
+    let result = ''
+    if (type === 'YYYY/MM/DD') {
+        result = `${t1}`
+    }else {
+        result = `${t1} ${t2}`
+    }
+    return result
 }
 
 function formatMoney(money) {

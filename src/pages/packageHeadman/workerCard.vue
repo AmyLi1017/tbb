@@ -34,6 +34,7 @@
     import workerCardBaseInfo1 from "@/components/teamHeader/worker-card-base-info1"
     import teamCardBaseInfo2 from '@/components/employer/team-card-baseInfo2'
     import popList from '@/components/popList'
+    import util from '@/utils/index'
 
     export default {
         name: "workerCard",
@@ -112,7 +113,64 @@
             }
         },
         methods: {
+            //关闭弹窗
+            closePop(e){
+              this.showPopList = e;
+            },
+            //获取班组联系方式
+            getTeamPhone(){
+              let _this = this;
+              //判断用户是否实名--------------判断获取次数，待定
+              if (this.isAuthentication == 1) {
+                let data = {id: this.customerId};
+                api.postCustomerPhone(data).then(res => {
+                  if (res.messageId == 1000) {
+                    _this.phone = res.body.phone;
+                    wx.makePhoneCall({
+                      phoneNumber: res.body.phone //仅为示例，并非真实的电话号码
+                    })
+                  }else {
+                    uni.showToast({
+                      title: res.zhError,
+                      icon: "none",
+                    });
+                  }
+                });
+              }else {
+                uni.showToast({
+                  title: '请先实名，实名后可查看班组联系方式！',
+                  icon: "none",
+                  duration: 2000
+                });
+              }
+            },
+            inviteStatusChange(value) {
+              this.canInvite = value;
+              this.showPopList = false;
+            },
+            addTeam(){
+              if (this.canInvite) {
+                if (this.inviteListTotal == 0){
+                  uni.showModal({
+                    title: '',
+                    content: '您还没有发布班组引进需求，请先去发布再邀请班组',
+                    confirmText: '立即发布',
+                    success: function (res) {
+                      if (res.confirm) {
+                        uni.navigateTo({
+                          url: "/pages/packageEmployer/projectForm"
+                        });
+                      } else if (res.cancel) {
+                      }
+                    }
+                  });
+                }else {
+                  this.showPopList = true
+                }
+              }
+            },
             loadInfo(){
+                let _this = this;
                 let data = {customerId: this.customerId};
                 //获取工人基本信息1
                 api.postTeamCustomerBase(data).then(res => {
@@ -125,8 +183,16 @@
                 api.postWorkerBaseInfo(data).then(res => {
                     if (res.messageId == 1000) {
                         _this.info2 = res.body;
-
-                        _this.info2.workTypeList = _this.info2.workTypeName;
+                        if (_this.info2.workerWorkTypeList.length > 0) {
+                          _this.info2.workTypeList = ''
+                          _this.info2.workerWorkTypeList.forEach((item, index) => {
+                            if (index === _this.info2.workerWorkTypeList.length - 1) {
+                              _this.info2.workTypeList += item.workTypeName
+                            }else {
+                              _this.info2.workTypeList += item.workTypeName + '、'
+                            }
+                          })
+                        }
                         _this.applyStatus = _this.info2.applyStatus;
                     }
                 });
@@ -134,12 +200,16 @@
                 //获取工人职业技能信息
                 api.postWorkerAbilityInfo(data).then(res => {
                     if (res.messageId == 1000) {
-                        _this.baseInfo1 = res.body;
+                      if (res.body.length > 0) {
+                        _this.baseInfo1 = res.body.map(item => {
+                          item.files = util.urlStringToArray(item.files)
+                          return item
+                        })
+                      }
                     }
                 });
             },
             loadData(isLoadMore){
-
                 //获取工人项目经验
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
@@ -168,6 +238,11 @@
                             this.isLoadMore = false
                         }
 
+                        res.body.data = res.body.data.map(item => {
+                          item.files = util.urlStringToArray(item.files)
+                          return item
+                        })
+
                         if (isLoadMore) {
                             _this.baseInfo2 = this.baseInfo2.concat(res.body.data)
                         } else {
@@ -180,7 +255,7 @@
                         wx.hideLoading();
                         wx.showToast({
                             icon: "none",
-                            title: error
+                            title: '网络错误，请重试！'
                         });
                         this.isLoadMore = false;
                     }
@@ -188,15 +263,16 @@
                     wx.hideLoading();
                     wx.showToast({
                         icon: "none",
-                        title: error
+                        title: '网络错误，请重试！'
                     });
                     this.isLoadMore = false;
                 });
             },
         },
         onLoad() {
-            this.isAuthentication = store.state.user.customer.isAuthentication;
-            this.customerId = this.$root.$mp.query.id;
+            this.isAuthentication = store.state.user.isAuthentication;
+            this.customerId = this.$root.$mp.query.customerId;
+            this.id = this.$root.$mp.query.id;
             this.loadData(false);//获取项目经验信息
             this.loadInfo();//获取基本信息
         },

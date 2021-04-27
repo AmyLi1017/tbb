@@ -56,15 +56,27 @@
                 }
                 .rt{
                     flex: 5;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
                 }
                 .lf{
                     flex: 2;
                     text-align: right;
                     color: @otherColorR;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                    overflow: hidden;
                 }
             }
             .p{
                 color: @delColor;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 1;
+                overflow: hidden;
             }
         }
         .btnBox{

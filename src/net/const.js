@@ -99,7 +99,7 @@ let URL = {
   POST_WORKER_REQUIREMENT_EDIT: "/team/workerRequirement/edit",
 
   //班组-招工人-我的招工-发布-修改回显
-  POST_WORKER_REQUIREMENT_GET: "/team/workerRequirement/get",
+  POST_WORKER_REQUIREMENT_GET: "/team/workerRequirement/detail",
 
   //班组-招工人-我的招工-刷新
   POST_WORKER_REQUIREMENT_REFRESH: "/team/workerRequirement/refresh",

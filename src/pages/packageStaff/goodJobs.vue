@@ -45,7 +45,7 @@
                 provinceId: "",  //省份Id   val2
                 cityId: "",      //城市Id   valMulti
                 workType: '',
-                pageSize: '',
+                pageSize: 20,
                 pageIndex: 1,
 
                 workLists: '',
@@ -103,105 +103,27 @@
             },
 
             loadProvinces(){
-                //测试数据-----------------------------------------待删除
-                this.provinceList = [
-                    {
-                        text: '云南省',
-                        value: 450000
-                    },
-                    {
-                        text: '浙江省',
-                        value: 651654
-                    }
-                ];
-
                 //获取省份
                 let options = [];
                 let resOptions = [];
-                api.postRegion({level: '',proId: ''}).then(res => {
+                let _this = this;
+                api.postRegion({level: '1',proId: ''}).then(res => {
                     if (res.messageId == 1000) {
                         resOptions = res.body;
+                        for(let i = 0,len=resOptions.length; i < len; i++) {
+                          let obj = {
+                            value: '',
+                            text: ''
+                          };
+                          obj.value = resOptions[i].id;
+                          obj.text = resOptions[i].regionName;
+                          options.push(obj)
+                        }
+                      _this.provinceList = options
                     }
                 });
-
-                //测试数据-----------------------------待注释
-                resOptions = [{
-                    id: 450000, //行政区id
-                    regionName: "云南省", //行政区名称
-                    provinceSimple: "滇", // 省简称
-                    level: 1 //等级:1省,2市,3区县
-                }, {
-                    id: 651654, //行政区id
-                    regionName: "浙江省", //行政区名称
-                    provinceSimple: "浙", // 省简称
-                    level: 1 //等级:1省,2市,3区县
-                }
-                ];
-
-                for(let i = 0,len=resOptions.length; i < len; i++) {
-                    let obj = {
-                        value: '',
-                        text: ''
-                    };
-                    obj.value = resOptions[i].id;
-                    obj.text = resOptions[i].regionName;
-
-                    options.push(obj)
-                }
-                console.log('provinceList');
             },
             loadData(isLoadMore) {
-                //测试数据，带注释 -------------------------------------------------
-                this.workLists = [{
-                    id: "1sdsewwewqqwasweew", // 招工id
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    requirementName: "项目名项目名项目名项目名1", // 标题
-                    provinceId: 140000,  // 省id
-                    provinceName: "重庆市",   // 省名称
-                    cityId: 140100,  // 市id
-                    cityName: "渝北区",  // 市名称
-                    salaryMin: 100, // 最低薪资:元/日
-                    salaryMax: 500, // 最高薪资:元/日
-                    workTypeText: '钢筋工、水泥工',
-                    workType: [  // 招聘工种数组
-                        {
-                            workTypeId:1221,
-                            workTypeName:"钢筋工"
-                        },
-                        {
-                            workTypeId:121,
-                            workTypeName:"水泥工"
-                        }
-                ],
-                    description: "招聘介绍",  // 招聘介绍
-                    requirementStatus:1  // 招聘状态:0停止,1招聘中
-                },{
-                    id: "1sdsewwewqqwasweew", // 招工id
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    requirementName: "项目名项目名项目名项目名2", // 标题
-                    provinceId: 140000,  // 省id
-                    provinceName: "重庆市",   // 省名称
-                    cityId: 140100,  // 市id
-                    cityName: "渝北区",  // 市名称
-                    salaryMin: 100, // 最低薪资:元/日
-                    salaryMax: 300, // 最高薪资:元/日
-                    workTypeText: '水泥工',
-                    workType: [  // 招聘工种数组
-                        {
-                            workTypeId:1221,
-                            workTypeName:"钢筋工"
-                        },
-                        {
-                            workTypeId:121,
-                            workTypeName:"水泥工"
-                        }
-                    ],
-                    description: "招聘介绍招聘介绍招聘介绍招聘介绍招聘介绍招聘介绍招聘介绍招聘介绍招聘介绍",  // 招聘介绍
-                    requirementStatus:1  // 招聘状态:0停止,1招聘中
-                }
-                ];
-
-
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
                         this.pageIndex++;
@@ -220,7 +142,6 @@
                     pageSize: '',
                     pageIndex: 1,
                 };
-                console.log(data,'data');
                 api.postStaffWorkList(data).then((res) => {
                     wx.hideLoading();
                     if (res.body.pageTotal == this.pageIndex) {
@@ -232,9 +153,10 @@
                         this.isLoadMore = false
                     }
                     let list = res.body.data.map(item => {
-                        if (item.workType){
-                           item.workType.forEach((i,index) => {
-                               if (index == item.workType.length-1) {
+                        item.workTypeText = ''
+                        if (item.workerRequirementWorkTypeList.length > 0 ){
+                           item.workerRequirementWorkTypeList.forEach((i,index) => {
+                               if (index == item.workerRequirementWorkTypeList.length - 1) {
                                    item.workTypeText += i.workTypeName
                                }else {
                                    item.workTypeText += i.workTypeName + '、'
@@ -252,7 +174,6 @@
                         });
                         this.workLists = list
                     }
-
                     this.isSearch = true;
                     this.totalNum = res.body.total;
 
@@ -265,43 +186,22 @@
                     this.isLoadMore = false;
                     this.loadStatus = ''
                 });
-
-
-
             },
             loadWorkType(){
-                //测试数据-----------------------------------------待删除
-                this.workerTypeList = [
-                    {
-                        text: '架子工',
-                        value: 0
-                    },
-                    {
-                        text: '抹灰工',
-                        value: 1
-                    },
-                    {
-                        text: '钢筋工',
-                        value: 2
-                    }
-                ]
-
-                console.log(this.workerTypeList,"this.workerTypeList");
-
+                let _this = this;
                 api.getWorkerType().then(res => {
                     if (res.messageId == 1000) {
                         let workerTypes = [];
                         let body = res.body;
-                        for (let i; i < res.body.length; i++){
+                        for (let i = 0; i < res.body.length; i++){
                             let obj = {text: '', value: ''};
-                            obj.text = body[i].id;
-                            obj.value = body[i].name;
+                            obj.text = body[i].name;
+                            obj.value = body[i].id;
                             workerTypes.push(obj);
                         }
-                        _this.workerTypeList.push(workerTypes);
+                        _this.workerTypeList = (workerTypes);
                     }
                 })
-
             }
         },
         onLoad(){

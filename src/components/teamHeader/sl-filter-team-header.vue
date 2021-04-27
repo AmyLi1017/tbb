@@ -114,51 +114,23 @@
             getProvinceChange(value){
                 let options = [];
                 let resOptions = [];
-                api.postRegion({level: '',proId: value}).then(res => {
+                if (value !== '') {
+                  api.postRegion({level: '',proId: value}).then(res => {
                     if (res.messageId == 1000) {
-                        resOptions = res.body;
+                      resOptions = res.body;
+                      for(let i = 0,len = resOptions.length; i < len; i++) {
+                        let obj = {
+                          value: '',
+                          text: '',
+                        };
+                        obj.value = resOptions[i].id;
+                        obj.text = resOptions[i].regionName;
+                        options.push(obj)
+                      }
+                      this.multiList = options;
                     }
-                });
-
-                //测试数据-----------------------------待注释
-                if (value == 450000){
-                    resOptions = [{
-                        id: 450100, //行政区id
-                        regionName: "昆明市", //行政区名称
-                        provinceSimple: null, // 省简称
-                        level: 2 //等级:1省,2市,3区县
-                    }, {
-                        id: 450200, //行政区id
-                        regionName: "玉溪市", //行政区名称
-                        provinceSimple: null, // 省简称
-                        level: 2 //等级:1省,2市,3区县
-                    }];
+                  });
                 }
-                if (value == 651654) {
-                    resOptions = [{
-                        id: 651100, //行政区id
-                        regionName: "杭州市", //行政区名称
-                        provinceSimple: null, // 省简称
-                        level: 2 //等级:1省,2市,3区县
-                    }, {
-                        id: 651200, //行政区id
-                        regionName: "义乌市", //行政区名称
-                        provinceSimple: null, // 省简称
-                        level: 2 //等级:1省,2市,3区县
-                    }];
-                }
-
-                for(let i = 0,len=resOptions.length; i < len; i++) {
-                    let obj = {
-                        value: '',
-                        text: '',
-                    };
-                    obj.value = resOptions[i].id;
-                    obj.text = resOptions[i].regionName;
-                    options.push(obj)
-                }
-                this.multiList = options;
-                console.log(this.multiList,'isLoadMulti')
             },
 
         },
