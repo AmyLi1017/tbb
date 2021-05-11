@@ -1,17 +1,18 @@
 <template>
     <div class="container">
         <resultTeamsCheck :teamsList="teamsList" :checkList="checkList" @click="saveResults"></resultTeamsCheck>
-        <loadMore :status="loadStatus"></loadMore>
+        <empty v-if="teamsList.length === 0" :title="emptyTips"></empty>
     </div>
 </template>
 
 <script>
     import resultTeamsCheck from '@/components/employer/result-teams-check'
     import loadMore from '@/components/uni-load-more'
+    import empty from '@/components/empty'
     import api from '@/net/api'
     export default {
         name: "resultCheck",
-        components: {resultTeamsCheck,loadMore},
+        components: {resultTeamsCheck,loadMore,empty},
         data(){
             return {
                 projectId: '',
@@ -20,10 +21,11 @@
 
                 isHasMoreData: false,
                 tipsText: '到底了，不要再拉了',
+                emptyTips: '列表为空！',
                 loadStatus:'loading',  //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
-                isLoadMore:false,  //是否加载中
+                isLoadMore: false,  //是否加载中
                 pageIndex: 1,
-                pageSize: ''
+                pageSize: 10
             }
         },
         methods: {
@@ -70,68 +72,9 @@
 
             },
             loadData(isLoadMore){
-                //测试数据，带注释 -------------------------------------------------
-                this.teamsList = [{
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    icon: "../../pages/packageEmployer/static/img/starUser2.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    provinceName: "重庆市", // 省名称
-                    cityName: "江北区", // 市名称
-                    population: 22, // 队伍人数
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    projectName: "万科西城项目一期土石方", // 最近工程
-                    mainEnterprise: "重庆建工第三建筑有限公司", // 总包单位
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    isSuit: 1,// 是否合适:0待定,1合适,2不合适
-                    teamSearchWorkTypeResponseList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ]
-                },{
-                    customerId: "1sweweew", // 客户id，32位字符串
-                    icon: "../../pages/packageEmployer/static/img/starUser2.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    provinceName: "重庆市", // 省名称
-                    cityName: "江北区", // 市名称
-                    population: 22, // 队伍人数
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    projectName: "万科西城项目一期土石方", // 最近工程
-                    mainEnterprise: "重庆建工第三建筑有限公司", // 总包单位
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    isSuit: 2,// 是否合适:0待定,1合适,2不合适
-                    teamSearchWorkTypeResponseList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ]
-                }];
-                this.checkList = [
-                    {
-                        name: '小飞',
-                        value: '1',
-                        checked: ''
-                    },{
-                        name: '张三',
-                        value: '2',
-                        checked: ''
-                    }
-                ];
-
                 let data = {
                     projectRequirementId: this.projectId,
-                    isSuit: '',
-                    pageSize: '',
+                    pageSize: this.pageSize,
                     pageIndex: this.pageIndex,
                 };
 
@@ -146,13 +89,15 @@
                 }
 
                 let _this = this;
-                wx.showLoading();
+                uni.showLoading({
+                  title: '加载中'
+                });
                 api.postTeamSuitList(data).then((res) => {
                     wx.hideLoading();
                     if (res.messageId == 1000){
                         if (res.body.pageTotal == this.pageIndex) {
                             this.isHasMoreData = false;
-                            this.isLoadMore = false;
+                            this.isLoadMore = true;
                             this.loadStatus = 'nomore'
                         } else {
                             this.isHasMoreData = true;
@@ -182,8 +127,11 @@
                             _this.teamsList = list;
                             _this.checkList = checkList;
                         }
-
-
+                    }else if (res.messageId == 2001) {
+                      _this.teamsList = [];
+                      _this.checkList = [];
+                      _this.isLoadMore = true;
+                      _this.isHasMoreData = false;
                     }
                 }).catch(error => {
                     wx.hideLoading();

@@ -76,50 +76,6 @@
                 });
             },
             loadTeamList(){
-                //测试数据-------------------------------待删
-                this.teamList =  [
-                    {
-                        id: "1133221dsds",  // id
-                        name: "小飞",   // 名字
-                        idCard: "1242232****13232",   // 身份证号码，中间会后端隐藏
-                        workType: [  // 招聘工种数组
-                            {
-                                workTypeId:1221,
-                                workTypeName:"钢筋工"
-                            },
-                            {
-                                workTypeId:121,
-                                workTypeName:"水泥工"
-                            }
-                        ]
-                    },{
-                        id: "1133221dsds",  // id
-                        name: "小飞",   // 名字
-                        idCard: "1242232****13232",   // 身份证号码，中间会后端隐藏
-                        workType: [  // 招聘工种数组
-                            {
-                                workTypeId:1221,
-                                workTypeName:"钢筋工"
-                            },
-                            {
-                                workTypeId:121,
-                                workTypeName:"水泥工"
-                            }
-                        ]
-                    }
-                ];
-                this.teamList.forEach((item,index) => {
-                    this.teamList[index].workText = '';
-                    for (let j = 0; j < item.workType.length; j++) {
-                        if (j == item.workType.length - 1){
-                            this.teamList[index].workText += item.workType[j].workTypeName
-                        } else {
-                            this.teamList[index].workText += item.workType[j].workTypeName + '、'
-                        }
-                    }
-                });
-
-
                 let data = {
                     id: this.projectId
                 };
@@ -128,7 +84,6 @@
                     wx.hideLoading();
                     if (res.messageId == 1000){
                         this.teamList = res.body;
-
                         this.teamList.forEach((item,index) => {
                             this.teamList[index].workText = '';
                             for (let j = 0; j < item.workType.length; j++) {

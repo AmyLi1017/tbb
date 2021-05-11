@@ -1,17 +1,11 @@
 <template>
     <div class="container">
-        <div class="tabs" v-if="projectType == 0">
-            <div class="tab"><span :class="tabType==0? 'active':''" @click="tabChange(0)">全部</span></div>
-            <div class="tab"><span :class="tabType==1? 'active':''" @click="tabChange(1)">待定</span></div>
-            <div class="tab"><span :class="tabType==2? 'active':''" @click="tabChange(2)">合适</span></div>
-            <div class="tab"><span :class="tabType==3? 'active':''" @click="tabChange(3)">不合适</span></div>
-            <div class="tab"><span :class="tabType==4? 'active':''" @click="tabChange(4)">已确认</span></div>
-        </div>
-        <div class="tabs" v-else>
-            <div class="tab"><span :class="tabType==0? 'active':''" @click="tabChange(0)">全部</span></div>
-            <div class="tab"><span :class="tabType==1? 'active':''" @click="tabChange(1)">待定</span></div>
-            <div class="tab"><span :class="tabType==2? 'active':''" @click="tabChange(2)">合适</span></div>
-            <div class="tab"><span :class="tabType==3? 'active':''" @click="tabChange(3)">不合适</span></div>
+        <div class="tabs">
+            <div class="tab"><span :class="tabType=='-1'? 'active':''" @click="tabChange('-1')">全部</span></div>
+            <div class="tab"><span :class="tabType==0? 'active':''" @click="tabChange(0)">待定</span></div>
+            <div class="tab"><span :class="tabType==1? 'active':''" @click="tabChange(1)">合适</span></div>
+            <div class="tab"><span :class="tabType==2? 'active':''" @click="tabChange(2)">不合适</span></div>
+            <div class="tab" v-if="projectType == 0"><span :class="tabType==3? 'active':''" @click="tabChange(3)">已确认</span></div>
         </div>
         <projectRecordList :teamsList="teamsList" :listType="tabType" :projectType="projectType" @click="clickListItem"></projectRecordList>
         <loadMore :status="loadStatus"></loadMore>
@@ -31,14 +25,14 @@
                 projectId: '',
                 projectType: '',
                 teamsList: '',
-                tabType: 0,//0：全部，1：待定，2：合适，3：不合适
+                tabType: -1,//0：全部，1：待定，2：合适，3：不合适
 
                 isHasMoreData: false,
                 tipsText: '到底了，不要再拉了',
                 loadStatus:'loading',  //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
                 isLoadMore:false,  //是否加载中
                 pageIndex: 1,
-                pageSize: ''
+                pageSize: 10
             }
         },
         methods: {
@@ -76,7 +70,7 @@
                             success (res) {
                                 if (res.confirm) {
                                     wx.showLoading();
-                                    api.postProjectTeamsGet(data).then((res) => {
+                                    api.postTeamIsSuit(data).then((res) => {
                                         wx.hideLoading();
                                         if (res.messageId == 1000){
                                             wx.showToast({
@@ -101,76 +95,6 @@
                 }
             },
             loadData(isLoadMore){
-                //测试数据，带注释 -------------------------------------------------
-                this.teamsList = [{
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    icon: "../../pages/packageEmployer/static/img/starUser2.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    provinceName: "重庆市", // 省名称
-                    cityName: "江北区", // 市名称
-                    population: 22, // 队伍人数
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    projectName: "万科西城项目一期土石方", // 最近工程
-                    mainEnterprise: "重庆建工第三建筑有限公司", // 总包单位
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    isSuit: 0,// 是否合适:0待定,1合适,2不合适
-                    isImg: 1,//是否有图:0否,1有
-                    teamSearchWorkTypeResponseList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ]
-                },{
-                    customerId: "1sweweew", // 客户id，32位字符串
-                    icon: "../../pages/packageEmployer/static/img/starUser2.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    provinceName: "重庆市", // 省名称
-                    cityName: "江北区", // 市名称
-                    population: 22, // 队伍人数
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    projectName: "万科西城项目一期土石方", // 最近工程
-                    mainEnterprise: "重庆建工第三建筑有限公司", // 总包单位
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    isSuit: 1,// 是否合适:0待定,1合适,2不合适
-                    teamSearchWorkTypeResponseList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ]
-                },{
-                    customerId: "1sweweew", // 客户id，32位字符串
-                    icon: "../../pages/packageEmployer/static/img/starUser2.jpg", // 头像
-                    name: "小飞", // 姓名
-                    isAuthentication: 1, // 是否实名:0否,1是
-                    provinceName: "重庆市", // 省名称
-                    cityName: "江北区", // 市名称
-                    population: 22, // 队伍人数
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    projectName: "万科西城项目一期土石方", // 最近工程
-                    mainEnterprise: "重庆建工第三建筑有限公司", // 总包单位
-                    workContent: "地坪、抹灰、砌砖", // 工作内容
-                    isSuit: 2,// 是否合适:0待定,1合适,2不合适
-                    teamSearchWorkTypeResponseList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ]
-                }];
-
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
                         this.pageIndex++;
@@ -183,8 +107,8 @@
 
                 let data = {
                     projectRequirementId: this.projectId,
-                    isSuit: '',
-                    pageSize: '',
+                    isSuit: this.tabType == -1 ? '' : this.tabType,
+                    pageSize: this.pageSize,
                     pageIndex: this.pageIndex,
                 };
 
@@ -210,6 +134,8 @@
                             });
                             this.teamsList = list
                         }
+                    }else if (res.messageId == 2001) {
+                      this.teamsList = []
                     }
 
                 }).catch(error => {
@@ -220,6 +146,7 @@
                     });
                     this.isLoadMore = false;
                     this.loadStatus = ''
+                    this.teamsList = []
                 });
             }
         },

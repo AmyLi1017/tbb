@@ -14,14 +14,22 @@
                 <div class="rt val">{{item.workText}}</div>
             </div>
         </div>
+        <empty v-if="teamList.length === 0" :title="emptyTips"></empty>
     </div>
 </template>
 
 <script>
+    import empty from '@/components/empty-item'
     export default {
         name: "teams-simple-info",
+        components: {empty},
         props: {
             teamList: ''
+        },
+        data() {
+          return {
+            emptyTips: '暂无相关信息！'
+          }
         }
     }
 </script>

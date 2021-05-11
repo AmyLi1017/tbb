@@ -1,38 +1,54 @@
 <template>
     <div class="container">
         <div class="tabTop">
-            <div class="lf" @click="tabType(0)"><span class="stop" :class="listType == 0?'active':''">全部</span></div>
+            <div class="lf" @click="tabType(-1)"><span class="stop" :class="listType == -1?'active':''">全部</span></div>
             <div class="rt" @click="tabType(1)"><span class="stop" :class="listType == 1?'active':''">主动报名</span></div>
             <div class="rt" @click="tabType(2)"><span class="stop" :class="listType == 2?'active':''">邀请报名</span></div>
         </div>
         <div class="listBox">
             <serviceRecordList :listData="listData" :listType="listType" @click="stateChange"></serviceRecordList>
-            <!--<serviceRecordList :listData="listData" :listType="listType" @click="publishStateChange"></serviceRecordList>-->
+            <empty v-if="listData.length === 0" :title="emptyTips"></empty>
         </div>
-        <loadMore :status="loadStatus"></loadMore>
+        <loadMore :status="loadStatus" v-if="isLoadMore&&(listData.length>0)"></loadMore>
     </div>
 </template>
 
 <script>
     import serviceRecordList from '@/components/teamHeader/team-service-record'
     import loadMore from '@/components/uni-load-more'
+    import empty from "../empty";
     import api from '@/net/api'
 
     export default {
         name: "serviceRecord",
-        components: {serviceRecordList,loadMore},
+        components: {serviceRecordList,loadMore,empty},
+        props: {
+          isReachBottom: ''
+        },
         data(){
             return {
-                listType: 1,//1为主动，2为邀请，0为全部
-                listData: '',
-
-                pageSize: '',
+                listType: -1,//1为主动，2为邀请，0为全部
+                listData: [],
+                pageSize: 10,
                 pageIndex: 1,
                 isHasMoreData: false,
                 tipsText: '到底了，不要再拉了',
+                emptyTips: '列表为空！',
                 loadStatus:'loading',  //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
-                isLoadMore:false,  //是否加载中
+                isLoadMore: this.isReachBottom,  //是否加载中
             }
+        },
+        watch: {
+          isReachBottom: {
+            immediate: true,
+            handler(val){
+              this.isLoadMore = val;
+              if (this.isLoadMore) {
+                this.loadData(true);
+              }
+            },
+            deep: true
+          }
         },
         methods: {
             tabType(type){
@@ -114,115 +130,6 @@
             },
 
             loadData(isLoadMore) {
-                //测试数据，带注释 -------------------------------------------------
-                if (this.listType == 1) {//主动
-                    this.listData = [{
-                        id: 1, // 报名id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectId: "1sdsewweweew", // 项目id
-                        projectName: "项目名项目名项目名项目名1", // 项目名
-                        provinceId: 140000,  // 省id
-                        provinceName: "重庆市",   // 省名称
-                        cityId: 140100,  // 市id
-                        cityName: "渝北区",  // 市名称
-                        typeId: 12,  // 项目类型id
-                        typeName: "边坡工程",   // 项目类型名称
-                        endTime: 1232444343435,  // 截止时间:13位时间戳
-                        signWay: 1, // 报名方式:0未知,1主动,2邀请
-                        isSign: 1, // 是否报名成功:0否,1是
-                        isSuit: 0,  // 是否合适:0否,1是
-                        recommendStatus: 0 // 引进状态:0未引进,1成功,2失败
-                    },{
-                        id: 1, // 报名id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectId: "1sdsewweweew", // 项目id
-                        projectName: "项目名项目名项目名项目名1", // 项目名
-                        provinceId: 140000,  // 省id
-                        provinceName: "重庆市",   // 省名称
-                        cityId: 140100,  // 市id
-                        cityName: "渝北区",  // 市名称
-                        typeId: 12,  // 项目类型id
-                        typeName: "边坡工程",   // 项目类型名称
-                        endTime: 1232444343435,  // 截止时间:13位时间戳
-                        signWay: 1, // 报名方式:0未知,1主动,2邀请
-                        isSign: 1, // 是否报名成功:0否,1是
-                        isSuit: 1,  // 是否合适:0否,1是
-                        recommendStatus: 1 // 引进状态:0未引进,1成功,2失败
-                    }
-                    ];
-                }else if(this.listType == 2){//邀请
-                    this.listData = [{
-                        id: 1, // 报名id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectId: "1sdsewweweew", // 项目id
-                        projectName: "项目名项目名项目名项目名1", // 项目名
-                        provinceId: 140000,  // 省id
-                        provinceName: "重庆市",   // 省名称
-                        cityId: 140100,  // 市id
-                        cityName: "渝北区",  // 市名称
-                        typeId: 12,  // 项目类型id
-                        typeName: "边坡工程",   // 项目类型名称
-                        endTime: 1232444343435,  // 截止时间:13位时间戳
-                        signWay: 2, // 报名方式:0未知,1主动,2邀请
-                        isSign: 0, // 是否报名成功:0否,1是
-                        isSuit: 1,  // 是否合适:0否,1是
-                        recommendStatus: 0 // 引进状态:0未引进,1成功,2失败
-                    },{
-                        id: 1, // 报名id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectId: "1sdsewweweew", // 项目id
-                        projectName: "项目名项目名项目名项目名1", // 项目名
-                        provinceId: 140000,  // 省id
-                        provinceName: "重庆市",   // 省名称
-                        cityId: 140100,  // 市id
-                        cityName: "渝北区",  // 市名称
-                        typeId: 12,  // 项目类型id
-                        typeName: "边坡工程",   // 项目类型名称
-                        endTime: 1232444343435,  // 截止时间:13位时间戳
-                        signWay: 2, // 报名方式:0未知,1主动,2邀请
-                        isSign: 1, // 是否报名成功:0否,1是
-                        isSuit: 1,  // 是否合适:0未知,1合适,2不合适,3确认
-                        recommendStatus: 0 // 引进状态:0未引进,1成功,2失败
-                    }
-                    ];
-                }else if(this.listType == 0){//全部
-                    this.listData = [{
-                        id: 1, // 报名id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectId: "1sdsewweweew", // 项目id
-                        projectName: "项目名项目名项目名项目名1", // 项目名
-                        provinceId: 140000,  // 省id
-                        provinceName: "重庆市",   // 省名称
-                        cityId: 140100,  // 市id
-                        cityName: "渝北区",  // 市名称
-                        typeId: 12,  // 项目类型id
-                        typeName: "边坡工程",   // 项目类型名称
-                        endTime: 1232444343435,  // 截止时间:13位时间戳
-                        signWay: 2, // 报名方式:0未知,1主动,2邀请
-                        isSign: 0, // 是否报名成功:0否,1是
-                        isSuit: 1,  // 是否合适:0否,1是
-                        recommendStatus: 0 // 引进状态:0未引进,1成功,2失败
-                    },{
-                        id: 1, // 报名id
-                        customerId: "1sdsewweweew", // 客户id，32位字符串
-                        projectId: "1sdsewweweew", // 项目id
-                        projectName: "项目名项目名项目名项目名1", // 项目名
-                        provinceId: 140000,  // 省id
-                        provinceName: "重庆市",   // 省名称
-                        cityId: 140100,  // 市id
-                        cityName: "渝北区",  // 市名称
-                        typeId: 12,  // 项目类型id
-                        typeName: "边坡工程",   // 项目类型名称
-                        endTime: 1232444343435,  // 截止时间:13位时间戳
-                        signWay: 2, // 报名方式:0未知,1主动,2邀请
-                        isSign: 1, // 是否报名成功:0否,1是
-                        isSuit: 0,  // 是否合适:0否,1是
-                        recommendStatus: 0 // 引进状态:0未引进,1成功,2失败
-                    }
-                    ];
-                }
-
-
                 if (isLoadMore) {
                     if (this.isHasMoreData) {
                         this.pageIndex++;
@@ -234,11 +141,10 @@
                 }
 
                 let data = {
-                    signWay: this.listType,
-                    pageSize: '',
-                    pageIndex: 1,
+                    signWay: this.listType === -1 ? '':this.listType,
+                    pageSize: this.pageSize,
+                    pageIndex: this.pageIndex,
                 };
-                // console.log(data,'data');
                 api.postTeamServiceList(data).then((res) => {
                     wx.hideLoading();
                     if (res.messageId == 1000){
@@ -251,6 +157,7 @@
                             this.isLoadMore = false
                         }
 
+                        const list = res.body.data
                         if (isLoadMore) {
                             this.listData = this.listData.concat(list)
                         } else {
@@ -259,11 +166,11 @@
                             });
                             this.listData = list
                         }
+                        this.$emit('change', this.isLoadMore)
                     }else {
-                        wx.showToast({
-                            icon: "none",
-                            title: "加载失败，请重试！"
-                        });
+                        this.isLoadMore = true;
+                        this.listData = []
+                        this.$emit('change', this.isLoadMore)
                     }
                 }).catch(error => {
                     wx.hideLoading();
@@ -279,13 +186,7 @@
         },
         mounted(){
             this.loadData();//获取用户发布列表
-        },
-        onReachBottom(){  //上拉触底函数
-            if(!this.isLoadMore){  //此处判断，上锁，防止重复请求
-                this.isLoadMore = true;
-                this.loadData(true);
-            }
-        },
+        }
     }
 </script>
 

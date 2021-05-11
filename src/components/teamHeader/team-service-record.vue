@@ -15,13 +15,15 @@
                     <div class="item" v-if="item.signWay == 2">邀请报名</div>
                     <div class="item center" v-if="item.isSign == 0">未报名</div>
                     <div class="item center" v-if="item.isSign == 1">已报名</div>
+                    <div class="item rt" v-if="item.isSign == 0">-</div>
+                    <div class="item rt" v-if="item.isSuit == 3 && item.isSign == 1">确认</div>
                     <div class="item rt" v-if="item.isSuit == 2 && item.isSign == 1">不合适</div>
                     <div class="item rt" v-if="item.isSuit == 1 && item.isSign == 1">合适</div>
                 </div>
             </div>
             <div class="btn">
                 <div class="btnItem" @click="changeStatus(0,item.id)">删除</div>
-                <div class="btnItem" v-if="!item.recommendStatus == 0" @click="changeStatus(1,item.projectId)">查看结果</div>
+                <div class="btnItem" v-if="item.recommendStatus != 0" @click="changeStatus(1,item.projectId)">查看结果</div>
                 <div class="btnItem del" v-if="item.recommendStatus == 0 && item.isSign != 0">未结束</div>
                 <div class="btnItem" v-if="item.recommendStatus == 0 && item.isSign == 0" @click="changeStatus(2,item.projectId)">立即报名</div>
             </div>

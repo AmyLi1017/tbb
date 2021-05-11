@@ -8,41 +8,41 @@
                         <div class="leftSpan name">{{item.name}}<span class="tips" v-if="item.isAuthentication==1">已实名</span><span class="tips" v-if="item.isImg == 1">有图</span></div>
                     </div>
                     <div class="p1">
-                        <div class="leftSpan">队伍人数: <span class="teamNum">{{item.population}}</span>人</div>
+                        <div class="leftSpan">队伍人数: <span class="teamNum">&nbsp;&nbsp;{{item.population}}</span>人</div>
                     </div>
                     <div class="p2">
                         <div class="lf">拥有工种</div>
                         <div class="rt">
-                            <span class="littleTips" v-for="(i,index) in item.teamSearchWorkTypeResponseList" :key="index">{{i.workTypeName}}</span>
+                            <span class="littleTips" v-for="(i,index) in item.workType" :key="index">{{i.workTypeName}}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="listBottom" v-if="tabType == 0 && item.isSuit == 0 && projectType == 1">
+            <div class="listBottom" v-if="tabType == -1 && item.isSuit == 0 && projectType == 1">
                 <div class="lf" @click="clickItem(1,item.customerId,2)">不合适</div>
                 <div class="rt" @click="clickItem(1,item.customerId,1)">合适</div>
             </div>
-            <div class="listBottom" v-if="tabType == 0 && item.isSuit == 0 && projectType == 0">
+            <div class="listBottom" v-if="tabType == -1 && item.isSuit == 0 && projectType == 0">
                 <div class="lf del">不合适</div>
                 <div class="rt del">合适</div>
             </div>
-            <div class="listBottom" v-if="tabType == 0 && item.isSuit == 1">
+            <div class="listBottom" v-if="tabType == -1 && item.isSuit == 1">
                 <div class="lf del">不合适</div>
                 <div class="rt colorGe">合适</div>
             </div>
-            <div class="listBottom" v-if="tabType == 0 && item.isSuit == 2">
+            <div class="listBottom" v-if="tabType == -1 && item.isSuit == 2">
                 <div class="lf colorR">不合适</div>
                 <div class="rt del">合适</div>
             </div>
-            <div class="listBottom" v-if="tabType == 1 && item.isSuit == 0">
+            <div class="listBottom" v-if="tabType == 0 && item.isSuit == 0">
                 <div class="lf" @click="clickItem(1,item.customerId,2)">不合适</div>
                 <div class="rt" @click="clickItem(1,item.customerId,1)">合适</div>
             </div>
-            <div class="listBottom" v-if="tabType == 2 && item.isSuit == 1">
+            <div class="listBottom" v-if="tabType == 1 && item.isSuit == 1">
                 <div class="lf"></div>
                 <div class="rt colorGe">合适</div>
             </div>
-            <div class="listBottom" v-if="tabType == 3 && item.isSuit == 2">
+            <div class="listBottom" v-if="tabType == 2 && item.isSuit == 2">
                 <div class="lf colorR">不合适</div>
                 <div class="rt"></div>
             </div>
@@ -74,7 +74,6 @@
                 immediate: true,
                 handler(val){
                     this.teamList = val;
-                    console.log(val,"watchVal")
                 },
                 deep: true
             },
@@ -82,7 +81,6 @@
                 immediate: true,
                 handler(val){
                     this.tabType = val;
-                    console.log(val,"watchVal")
                 },
                 deep: true
             }

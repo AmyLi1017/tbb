@@ -21,6 +21,9 @@
     export default {
         name: "serviceRecord",
         components: {serviceRecordList,loadMore,empty},
+        props: {
+          isReachBottom: ''
+        },
         data(){
             return {
                 listType: 1,//1为发布中，0为已截止
@@ -33,8 +36,20 @@
                 isHasMoreData: false,
                 tipsText: '到底了，不要再拉了',
                 loadStatus:'loading',  //加载样式：more-加载前样式，loading-加载中样式，nomore-没有数据样式
-                isLoadMore:false,  //是否加载中
+                isLoadMore: this.isReachBottom,  //是否加载中
             }
+        },
+        watch: {
+          isReachBottom: {
+            immediate: true,
+            handler(val){
+              this.isLoadMore = val;
+              if (this.isLoadMore) {
+                this.loadData(true);
+              }
+            },
+            deep: true
+          }
         },
         methods: {
             tabType(type){
@@ -165,7 +180,7 @@
                     wx.hideLoading();
                     if (res.messageId == 1000){
                         this.isEmpty = false;//不为空
-                        if (res.body.data.pageTotal == this.pageIndex) {
+                        if (res.body.pageTotal == this.pageIndex) {
                           _this.isHasMoreData = false;
                           _this.isLoadMore = true;
                           _this.loadStatus = 'nomore'
@@ -182,11 +197,13 @@
                             });
                           _this.listData = list
                         }
+                        this.$emit('change', this.isLoadMore)
                     }else if (res.messageId == 2001) {
                       this.listData = []
                       this.isEmpty = true;
                       this.isLoadMore = true;
                       this.loadStatus = '';
+                      this.$emit('change', this.isLoadMore)
                     }
                 }).catch(error => {
                     wx.hideLoading();
@@ -197,19 +214,11 @@
                   _this.isLoadMore = true;
                   _this.loadStatus = ''
                 });
-
             },
-        },
-        onReachBottom(){  //上拉触底函数
-          console.log(this.isLoadMore, 'isLoadMore')
-          if(!this.isLoadMore){  //此处判断，上锁，防止重复请求
-            this.isLoadMore = true;
-            this.loadData(true);
-          }
         },
         mounted(){
             this.loadData();//获取用户发布列表
-        },
+        }
     }
 </script>
 

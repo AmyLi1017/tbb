@@ -298,7 +298,6 @@
     @import "../../assets/base";
     .container{
         letter-spacing: 1px;
-        padding-bottom: 500px;
         .search{
             text-align: center;
             padding-top: 20px;

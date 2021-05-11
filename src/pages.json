@@ -81,7 +81,7 @@
 				}
 			}
 		},
-		//服务记录
+		// 服务记录
 		{
 			"path": "pages/main/serverList/index",
 			"style": {
@@ -96,7 +96,8 @@
 							"color": "#FFFFFF"
 						}]
 					}
-				}
+				},
+				"enablePullDownRefresh": true
 			}
 		},
 		//服务记录--分包结果
