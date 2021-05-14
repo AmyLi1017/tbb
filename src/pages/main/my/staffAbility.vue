@@ -152,34 +152,30 @@
                 let data = {
                     id: this.id ? this.id : '',
                     certificateName: this.certificateName,
-                    files: this.files
+                    fileList: this.files
                 };
 
                 if (this.saveType === 0){//新增
                     api.postStaffAbilityEdit(data).then(res => {
                         if (res.messageId == 1000) {
                             wx.showToast({
-                                title: '发布成功！',
+                                title: '保存成功！',
                                 icon: 'none',
                                 duration: 2000
                             });
                             this.isActive = true;
-                            wx.navigateBack({
+                            setTimeout(function () {
+                              wx.navigateBack({
                                 delta: 1,
                                 success: function () {
-                                    getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
+                                  getCurrentPages()[1].onLoad(); // 执行前一个页面的onLoad方法
                                 }
-                            });
-                        }else {
-                            wx.showToast({
-                                title: '发布失败，请重试！',
-                                icon: 'none',
-                                duration: 2000
-                            });
+                              });
+                            }, 1500)
                         }
                     }).catch(res => {
                         wx.showToast({
-                            title: '发布失败，请重试！',
+                            title: '保存成功，请重试！',
                             icon: 'none',
                             duration: 2000
                         });
@@ -193,18 +189,14 @@
                                 duration: 2000
                             });
                             this.isActive = true;
-                            wx.navigateBack({
+                            setTimeout(function () {
+                              wx.navigateBack({
                                 delta: 1,
                                 success: function () {
-                                    getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
+                                  getCurrentPages()[1].onLoad(); // 执行前一个页面的onLoad方法
                                 }
-                            });
-                        }else {
-                            wx.showToast({
-                                title: '保存失败，请重试！',
-                                icon: 'none',
-                                duration: 2000
-                            });
+                              });
+                            }, 1500)
                         }
                     }).catch(res => {
                         wx.showToast({
@@ -214,14 +206,6 @@
                         });
                     });
                 }
-
-                //待注释------------------------------------------
-                wx.navigateBack({
-                    delta: 1,
-                    success: function () {
-                        getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
-                    }
-                });
             },
 
             //获取数据
@@ -230,22 +214,12 @@
                 //获取表单回显
                 api.postStaffAbilityGet({id: this.id}).then(res => {
                     if (res.messageId == 1000) {
-                        resOptions = res.body;
+                        let resOptions = res.body;
                         _this.certificateName = body.certificateName;
                         _this.files = body.files;
                         _this.imgSrcArr = body.files;
                     }
                 });
-                //待注释<<-------------------------------------
-                let body = {
-                    certificateName: "证书名称",   // 证书名称
-                    files: ['../../../static/imgs/starUser2.jpg','../../../static/imgs/starUser2.jpg']
-                };
-                this.certificateName = body.certificateName;
-                this.files = body.files;
-                this.imgSrcArr = body.files;
-
-                //待注释------------------------------------->>
             },
         },
         onLoad(){

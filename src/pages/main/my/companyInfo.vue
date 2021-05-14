@@ -133,35 +133,15 @@
             },
             //回显
             loadData(){
-                //带注释---------------------->>
-                let body = {
-                    id: "1sdsewweweew", // 企业信息id，32位字符串
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    enterpriseName: "重庆第一建筑劳务有限公司", // 企业名称
-                    enterpriseType: 1, // 企业类型:0未知,1建筑公司,2劳务公司,
-                    description: "2.挖土、凿石、照明、送风", // 企业介绍
-                    business: "../../../static/imgs/bgIcon.png" // 营业执照链接
-                };
-                this.enterpriseName = body.enterpriseName;
-                this.selId = body.enterpriseType;
-                this.description = body.description;
-                this.imgUrl = body.business;
-                this.imgSrc = body.business;
-                if (body.business.length > 0) {
-                    this.isHadImg = true;
-                }
-                //---------------------<<
-
                 let _this = this;
-                let data = {customerId: ''};
-                api.getCenterCompanyInfo(data).then(res => {
+                api.getCenterCompanyInfo().then(res => {
                     if (res.messageId == 1000) {
                         _this.enterpriseName = res.body.enterpriseName;
                         _this.selId = res.body.enterpriseType;
                         _this.description = res.body.description;
                         _this.imgUrl = res.body.business;
                         _this.imgSrc = res.body.business;
-                        if (res.body.business.length > 0) {
+                        if (res.body.business&&res.body.business.length > 0) {
                             _this.isHadImg = true;
                         }
                     }else {

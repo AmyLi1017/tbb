@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="title"><span class="lf">职业技能</span><div class="rt"><span class="iconfont iconfalse" @click="goToStaffAbility()"></span></div></div>
-        <div class="box">
+        <div class="box" v-if="info.length>0">
             <div class="proBox" v-for="(item,index) in info" @click="goToStaffAbility(item.id)">
                 <div class="p">
                     <div class="nameBox">
@@ -12,14 +12,22 @@
                 </div>
             </div>
         </div>
+        <empty v-if="info.length===0" :title="emptyTips"></empty>
     </div>
 </template>
 
 <script>
+import empty from "../empty-item";
     export default {
         name: "staff-card-baseInfo1",
+        components: {empty},
         props: {
             info: ''
+        },
+        data() {
+            return {
+                emptyTips: '信息为空，请先填写信息！'
+            }
         },
         methods: {
             goToStaffAbility(id){

@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="title"><span class="lf">项目经验</span><div class="rt"><span class="iconfont iconfalse" @click="goToStaffProjects()"></span></div></div>
-        <div class="box">
+        <div class="box" v-if="projectList.length>0">
             <div class="proBox" v-for="(item,index) in projectList" @click="goToStaffProjects(item.id)">
                 <div class="p">
                     <div class="nameBox">
@@ -19,14 +19,22 @@
                 </div>
             </div>
         </div>
+        <empty v-if="projectList.length===0" :title="emptyTips"></empty>
     </div>
 </template>
 
 <script>
+import empty from "../empty-item";
     export default {
         name: "staff-card-baseInfo2",
+        components: {empty},
         props: {
             projectList: ''
+        },
+        data() {
+            return {
+                emptyTips: '信息为空，请先填写信息！'
+            }
         },
         methods: {
             goToStaffProjects(id){

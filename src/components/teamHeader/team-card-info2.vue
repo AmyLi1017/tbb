@@ -2,37 +2,44 @@
     <div class="container">
         <div class="title">
             <span class="lf">班组信息</span>
-            <div class="rt">
+            <div class="rt" v-if="info">
                 <span class="status" v-if="info.applyStatus == 1">找工作中</span>
                 <span class="status" v-if="info.applyStatus == 2">观察中</span>
                 <span class="iconfont iconright"></span>
             </div>
+            <div class="rt" v-else>
+              <span class="status">去填写</span>
+              <span class="iconfont iconright"></span>
+            </div>
         </div>
-        <div class="p">
+        <div class="box" v-if="info">
+          <div class="p">
             <span class="text">工&nbsp;作&nbsp;年&nbsp;限：</span>
             <span class="val">{{info.workYear}}年</span>
-        </div>
-        <div class="p">
+          </div>
+          <div class="p">
             <span class="text">期望工作地：</span>
-            <span class="val">{{info.provinceName}}-{{info.cityName}}</span>
-        </div>
-        <div class="p">
+            <span class="val">{{info.provinceName}}<span v-if="info.cityName">-{{info.cityName}}</span></span>
+          </div>
+          <div class="p">
             <span class="text">身&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;份：</span>
             <span class="val" v-if="info.position == 0">未知</span>
             <span class="val" v-if="info.position == 1">班组长/承包人</span>
-        </div>
-        <div class="p">
+          </div>
+          <div class="p">
             <span class="text">工&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;种：</span>
-            <span class="val">{{info.workTypeList}}</span>
-        </div>
-        <div class="p" v-if="info.population">
+            <span class="val">{{info.workTypeText}}</span>
+          </div>
+          <div class="p" v-if="info.population">
             <span class="text">队&nbsp;伍&nbsp;人&nbsp;数：</span>
             <span class="val">{{info.population}}人</span>
-        </div>
-        <div class="p">
+          </div>
+          <div class="p">
             <span class="text">自&nbsp;我&nbsp;介&nbsp;绍：</span>
             <span class="val">{{info.description}}</span>
+          </div>
         </div>
+
     </div>
 </template>
 
@@ -68,6 +75,9 @@
                     font-weight: normal;
                     display: inline-block;
                     margin-right: 5px;
+                }
+                .iconright{
+                  font-size: 12px;
                 }
             }
         }

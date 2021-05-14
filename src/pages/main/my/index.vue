@@ -2,7 +2,7 @@
   <div class="container">
     <div class="topBox"></div>
     <div class="middle">
-      <img :src="info.customer.icon" alt="" mode="widthFix">
+      <div class="imgBox" :style="{backgroundImage: 'url(' + info.customer.icon + ')'}" v-if="info.customer.icon"></div>
       <div class="name">{{info.customer.name}}</div>
       <div class="phone">{{info.customer.phone}}</div>
     </div>
@@ -58,18 +58,7 @@
     data() {
       return {
           roleType: '',
-          info: {
-              customer: {
-                  icon: "../../../static/imgs/starUser2.jpg", // 头像
-                  account: "2133223", // 账号
-                  phone: "15068749417", // 手机号
-                  name: "小飞", // 姓名
-                  isAuthentication: 0, // 是否身份认证:0否,1是
-                  isImg: 1, // 班组账号是否有图:0否,1是
-              },
-              token: "qqwqeweq1232322sas", // token，32为字符
-              effectiveTime: 31000 // token有效时间：单位秒
-          }
+          info: {}
       }
     },
     methods: {
@@ -155,14 +144,17 @@
       text-align: center;
       padding-top: 40px;
       border-bottom: 2px solid @appBtnColor;
-      img{
+      .imgBox{
         display: inline-block;
         width: 66px;
-        height: 50%;
+        height: 66px;
         border-radius: 50%;
         position: absolute;
         left: calc(50% - 33px);
         top: -33px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center 0;
       }
       .name{
         font-size: 16px;

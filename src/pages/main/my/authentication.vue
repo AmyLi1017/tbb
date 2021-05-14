@@ -48,8 +48,8 @@
             <a class="button text-space" :class="isActive?'active':''" @click="saveInfo">提交实名认证</a>
         </div>
         <div class="hide" v-if="isAuthentication == 0">
-            <input type="text" v-model="frontPng" @change="uploadImgChange">
-            <input type="text" v-model="backPng" @change="uploadImgChange">
+            <input type="text" v-model="frontPng">
+            <input type="text" v-model="backPng">
         </div>
         <div class="showTips" v-if="isAuthentication == 1">
             <empty :title="tipsTitle"></empty>
@@ -68,11 +68,11 @@
         data(){
             return {
                 isAuthentication: '',
-                name: '张三',
-                sex: 0,// 性别:0女,1男,2未知
-                nationName: '汉族',
-                nationId: '1',
-                idCard: '36051236259874512365',
+                name: '',
+                sex: '',// 性别:0女,1男,2未知
+                nationName: '',
+                nationId: '',
+                idCard: '',
                 age: '',
                 frontPng: '',
                 frontImgSrc: '',
@@ -114,7 +114,6 @@
                     success (res) {
                         // tempFilePath可以作为img标签的src属性显示图片
                         const tempFilePaths = res.tempFilePaths;
-                        console.log(_this.imageName,'_this.imageName');
                         //上传图片
                         let url = 'http://116.62.14.183:9000/images/upload';
                         for (var index in res.tempFilePaths) {
@@ -135,21 +134,24 @@
                     }, // 设置请求的 header
                     formData: {'imageName': 'imageName'}, // HTTP 请求中其他额外的 form data
                     success: function (res) {
-                        if(res.messageId == 1000){
+                        let response = JSON.parse(res.data)
+                        if(response.messageId == 1000){
                             if (imgType == 0) {//正面
                                 _this.frontImgSrc = filePath;//预览路径绑定
-                                _this.frontPng = res.body.url;//保存地址
+                                _this.frontPng = response.body.url;//保存地址
                                 _this.chooseFront = true;//显示预览
                             }else if (imgType == 1) {//反面
                                 _this.backImgSrc = filePath;
-                                _this.backPng = res.body.url;
+                                _this.backPng = response.body.url;
                                 _this.chooseBack = true;
                             }
+                            // 图片校验、回显idCard信息
+                            // _this.uploadImgChange()
                         }else {
-                                wx.showToast({
-                                title: "上传失败，请重试！",
-                                icon: 'none',
-                                duration: 700
+                            wx.showToast({
+                            title: "上传失败，请重试！",
+                            icon: 'none',
+                            duration: 700
                             })
                         }
                     },
@@ -162,9 +164,9 @@
                     }
                 })
             },
+            //图片校验、回显idCard信息
             uploadImgChange(){
                 if (this.frontPng.length > 0 && this.backPng.length > 0) {
-                    //图片校验、回显idCard信息
                     let _this = this;
                     let data = {};
                     data.frontPng = this.frontPng;
@@ -195,6 +197,10 @@
                 }
             },
             saveInfo(){
+                // 待注释------------->>
+                this.checkIdCard = true
+                // 待注释-------------<<
+
                 if (this.checkIdCard) {
                     //提交实名认证
                     let data = {};
@@ -210,14 +216,12 @@
                         if (res.messageId == 1000) {
                             //更新用户信息--写入本地缓存
                             let userInfo = {
-                                customer: {
-                                    icon: res.body.icon, // 头像
-                                    account: res.body.account, // 账号
-                                    phone: res.body.phone, // 手机号
-                                    name: res.body.name, // 姓名
-                                    isAuthentication: res.body.isAuthentication, // 是否身份认证:0否,1是
-                                    isImg: res.body.isImg,//是否有图:0否,1是（只班组）
-                                },
+                                icon: res.body.icon, // 头像
+                                account: res.body.account, // 账号
+                                phone: res.body.phone, // 手机号
+                                name: res.body.name, // 姓名
+                                isAuthentication: res.body.isAuthentication, // 是否身份认证:0否,1是
+                                isImg: res.body.isImg,//是否有图:0否,1是（只班组）
                                 token: store.state.user.token, // token，32为字符
                                 effectiveTime: store.state.user.effectiveTime // token有效时间：单位秒
                             };
@@ -254,7 +258,7 @@
             }
         },
         onLoad() {
-            this.isAuthentication = store.state.user.customer.isAuthentication;
+            this.isAuthentication = store.state.user.isAuthentication;
         }
     }
 </script>
@@ -310,7 +314,6 @@
                     position: absolute;
                     transform: rotate(45deg);
                     font-size: 50px;
-                    font-weight: bold;
                     color: @delColor;
                     opacity: 0.5;
                     top: 30px;

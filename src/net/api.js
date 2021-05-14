@@ -141,7 +141,7 @@ let api = {
     //企业-班组-客户基本信息获取
     postTeamCustomerBase(data){
         return new Promise((resolve, reject) => {
-            fly.post(URL.POST_TEAMS_CUSTOMER_BASE,data).then(res => {
+            fly.get(URL.POST_TEAMS_CUSTOMER_BASE).then(res => {
                 if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
@@ -170,10 +170,26 @@ let api = {
         })
     },
 
-    //企业-班组-班组承包能力信息获取
-    postTeamCustomerAbility(obj){
+    //班组端-班组信息回显
+    getTeamCustomerInfo(obj){
         return new Promise((resolve, reject) => {
-            fly.post(URL.POST_TEAMS_CUSTOMER_ABILITY, obj).then(res => {
+            fly.get(URL.GET_TEAM_CUSTOMER_INFO).then(res => {
+                if (res.messageId == 1000 || res.messageId == 2001) {
+                    resolve(res)
+                } else {
+                    reject(res.msg)
+                }
+            }).catch(error => {
+                console.error(error)
+                reject("网络错误")
+            })
+        })
+    },
+
+    //企业-班组-班组承包能力信息获取
+    postTeamCustomerAbility(){
+        return new Promise((resolve, reject) => {
+            fly.get(URL.POST_TEAMS_CUSTOMER_ABILITY).then(res => {
                 if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
@@ -847,7 +863,7 @@ let api = {
     //个人中心-企业认证-企业信息回显
     getCenterCompanyInfo(obj){
         return new Promise((resolve, reject) => {
-            fly.post(URL.GET_COMPANY_INFO, obj).then(res => {
+            fly.get(URL.GET_COMPANY_INFO, obj).then(res => {
                 if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {
@@ -893,10 +909,9 @@ let api = {
     },
 
     //个人中心-班组信息-承包能力回显
-    POST_TEAM_ABILITY_GET: "",//待修改-------------------------
-    postTeamAbilityGet(obj){
+    postTeamAbilityGet(){
         return new Promise((resolve, reject) => {
-            fly.post(URL.POST_TEAM_ABILITY_GET, obj).then(res => {
+            fly.get(URL.POST_TEAM_ABILITY_GET).then(res => {
                 if (res.messageId == 1000 || res.messageId == 2001) {
                     resolve(res)
                 } else {

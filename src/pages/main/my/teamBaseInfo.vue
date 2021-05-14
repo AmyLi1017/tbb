@@ -11,7 +11,7 @@
         </div>
         <div class="liBox">
             <div class="name">期望工作地<span class="red">*</span></div>
-            <provinceSel class="sel" :options="provinces" @change="onProChange" :key="index" :selProvinceId="proId"></provinceSel>
+            <provinceSel class="sel" :options="proArr" @change="onProChange" :key="index" :selProvinceId="proId"></provinceSel>
             <citySel class="sel" :options="citiesArr" @change="onCityChange" :key="index" :cityId="cityId" :selCityIndex="selCityIndex"></citySel>
         </div>
         <div class="liBox">
@@ -93,56 +93,39 @@
             }
         },
         computed: {
-            provinces(){
-                //获取省份
-                let options = [{id: '-1',name: '请选择省市'}];
-                let resOptions = [];
-                api.postRegion({level: '',proId: ''}).then(res => {
-                    if (res.messageId == 1000) {
-                        resOptions = res.body;
-                    }
-                });
 
-                //测试数据-----------------------------待注释
-                resOptions = [{
-                    "id": 450000, //行政区id
-                    "regionName": "云南省", //行政区名称
-                    "provinceSimple": "滇", // 省简称
-                    "level": 1 //等级:1省,2市,3区县
-                }, {
-                    "id": 651654, //行政区id
-                    "regionName": "浙江省", //行政区名称
-                    "provinceSimple": "浙", // 省简称
-                    "level": 1 //等级:1省,2市,3区县
-                }
-                ];
-
-                for(let i = 0,len=resOptions.length; i < len; i++) {
-                    let obj = {
-                        id: '',
-                        name: '',
-                        provinceSimple: '',
-                        level: ''
-                    };
-                    obj.id = resOptions[i].id;
-                    obj.name = resOptions[i].regionName;
-                    obj.provinceSimple = resOptions[i].provinceSimple;
-                    obj.level = resOptions[i].level;
-
-                    options.push(obj)
-                }
-                this.proArr = options;
-                return options;
-            },
         },
         methods: {
+            provinces(){
+            //获取省份
+            let options = [{id: '-1',name: '请选择省市'}];
+            let resOptions = [];
+            api.postRegion({level: '1',proId: ''}).then(res => {
+              if (res.messageId == 1000) {
+                resOptions = res.body;
+                for(let i = 0,len=resOptions.length; i < len; i++) {
+                  let obj = {
+                    id: '',
+                    name: '',
+                    provinceSimple: '',
+                    level: ''
+                  };
+                  obj.id = resOptions[i].id;
+                  obj.name = resOptions[i].regionName;
+                  obj.provinceSimple = resOptions[i].provinceSimple;
+                  obj.level = resOptions[i].level;
+                  options.push(obj)
+                }
+                this.proArr = options;
+              }
+            });
+          },
             //表单变化监听(select)
             onTypeChange (e) {
                 this.selId = e.id;
             },
             //交互
-            onProChange(e){
-                console.log(e);
+            onProChange(e, isGet){
                 this.proId = e.id;
                 this.proName = e.name;
                 this.proLevel = e.level;
@@ -150,60 +133,34 @@
                 let options = [{id: '-1',name: '请选择区县'}];
                 let resOptions = [];
                 if (this.proId !== -1 && this.proLevel < 3) {
-                    api.postRegion({level: this.proLevel,proId: this.proId}).then(res => {
+                    let _this = this;
+                    api.postRegion({level: '', proId: this.proId}).then(res => {
                         if (res.messageId == 1000) {
                             resOptions = res.body;
+                            for(let i = 0,len = resOptions.length; i < len; i++) {
+                              let obj = {
+                                id: '',
+                                name: '',
+                                provinceSimple: '',
+                                level: ''
+                              };
+                              obj.id = resOptions[i].id;
+                              obj.name = resOptions[i].regionName;
+                              obj.provinceSimple = resOptions[i].provinceSimple;
+                              obj.level = resOptions[i].level;
+                              options.push(obj)
+                            }
+                          _this.citiesArr = options;
+                          _this.cityLevel = '';
+                          if (isGet) {
+                            _this.cityId = isGet.cityId;
+                            _this.cityName = isGet.cityName;
+                          }else {
+                            _this.cityId = '-1';
+                            _this.cityName = "请选择区县";
+                          }
                         }
                     });
-
-                    //测试数据-----------------------------待注释
-                    if (this.proId == 450000){
-                        resOptions = [{
-                            "id": 450100, //行政区id
-                            "regionName": "昆明市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }, {
-                            "id": 450200, //行政区id
-                            "regionName": "玉溪市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }];
-                    }
-                    if (this.proId == 651654) {
-                        resOptions = [{
-                            "id": 651100, //行政区id
-                            "regionName": "杭州市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }, {
-                            "id": 651200, //行政区id
-                            "regionName": "义乌市", //行政区名称
-                            "provinceSimple": null, // 省简称
-                            "level": 2 //等级:1省,2市,3区县
-                        }];
-                    }
-
-
-                    for(let i = 0,len=resOptions.length; i < len; i++) {
-                        let obj = {
-                            id: '',
-                            name: '',
-                            provinceSimple: '',
-                            level: ''
-                        };
-                        obj.id = resOptions[i].id;
-                        obj.name = resOptions[i].regionName;
-                        obj.provinceSimple = resOptions[i].provinceSimple;
-                        obj.level = resOptions[i].level;
-
-                        options.push(obj)
-                    }
-                    this.citiesArr = options;
-                    this.cityId = '-1';
-                    this.cityName = "请选择区县";
-                    this.cityLevel = '';
-                    this.selCityIndex = 0;
                 }else {
                     this.citiesArr = options;
                     this.cityId = '-1';
@@ -245,7 +202,7 @@
                 }
 
             },
-            //提交---修改
+            // 提交---修改---验证
             saveInfo(){
                 this.formErr = true;
                 //校验--必填项
@@ -309,7 +266,6 @@
                     obj.workTypeName = item.name;
                     workCheckedType.push(obj);
                 });
-
                 let data = {
                     applyStatus: this.applyStatus,
                     provinceId: this.proId,
@@ -320,9 +276,8 @@
                     position: this.position,
                     population: this.population,
                     description: this.description,
-                    workType: workCheckedType
+                    teamWorkTypeList: workCheckedType
                 };
-
                 api.postTeamBaseInfoEdit(data).then(res => {
                     if (res.messageId == 1000) {
                         wx.showToast({
@@ -331,12 +286,14 @@
                             duration: 2000
                         });
                         this.isActive = true;
-                        wx.navigateBack({
+                        setTimeout(function (){
+                          wx.navigateBack({
                             delta: 1,
                             success: function () {
-                                getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
+                              getCurrentPages()[1].onLoad(); // 执行前一个页面的onLoad方法
                             }
-                        });
+                          });
+                        },2000)
                     }else {
                         wx.showToast({
                             title: '保存失败，请重试！',
@@ -351,121 +308,78 @@
                         duration: 2000
                     });
                 });
-
-                //待注释------------------------------------------
-                wx.navigateBack({
-                    delta: 1,
-                    success: function () {
-                        getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
-                    }
-                });
             },
 
             //获取数据
             loadData(){
                 //获取表单回显
-                api.postWorkerRequirementGet({id: this.id}).then(res => {
+                api.getTeamCustomerInfo({customerId: this.id}).then(res => {
                     if (res.messageId == 1000) {
-                        resOptions = res.body;
+                        let body = res.body;
+                      this.selId = body.applyStatus;
+                      this.workYear = body.workYear;
+                      this.position = body.position;
+                      this.population = body.population;
+                      this.description = body.description;
+
+                      let obj = {
+                        id: body.provinceId,
+                        name: body.provinceName,
+                        level: 2
+                      };
+                      this.onProChange(obj, {
+                        cityId: body.cityId,
+                        cityName: body.cityName
+                      });
+
+                      this.checkedArr = [];
+                      for (let k = 0; k < body.teamWorkTypeList.length; k++){
+                        let obj = {
+                          value: '',
+                          name: '',
+                          checked: true
+                        };
+                        obj.value = body.teamWorkTypeList[k].workTypeId;
+                        obj.name = body.teamWorkTypeList[k].workTypeName;
+                        this.checkedArr.push(obj);
+                      }
+                      this.workText = '';
+                      for (let j = 0; j < body.teamWorkTypeList.length; j++){
+                        let item = body.teamWorkTypeList[j];
+                        if (j == body.teamWorkTypeList.length - 1) {
+                          this.workText += item.workTypeName;
+                        }else {
+                          this.workText += item.workTypeName + '、';
+                        }
+                      }
                     }
                 });
-                //待注释-------------------------------------
-                let body = {
-                    customerId: "1sdsewweweew", // 客户id，32位字符串
-                    applyStatus: 1, // 求职状态:0未知,1找工作中,2观察中
-                    workYear: 12, // 工作年限
-                    position: 1, // 身份:0未知,1班组长/承包人
-                    provinceId: 450000,  // 期望工作地省id
-                    provinceName: "云南省",   // 期望工作地省名称
-                    cityId: 450100,  // 期望工作地市id
-                    cityName: "昆明市",  // 期望工作地市名称
-                    workTypeList: [ // 工种列表
-                        {
-                            workTypeId: 1,   // 工种id
-                            workTypeName: "架子工"},   // 工种名称
-                        {
-                            workTypeId: 1,
-                            workTypeName: "木工"
-                        }
-                    ],
-                    population: 23, // 队伍人数
-                    description: "从业20多年，专业承包各类工程", // 自我介绍
-                    isImg: 1, // 是否有图:0否,1是
-                };
-                this.selId = body.applyStatus;
-                this.workYear = body.workYear;
-                this.position = body.position;
-                this.population = body.population;
-                this.description = body.description;
-
-                let obj = {
-                    id: body.provinceId,
-                    name: body.provinceName,
-                    level: 2
-                };
-                this.onProChange(obj);
-                this.cityId = body.cityId;
-                this.cityName = body.cityName;
-
-                this.checkedArr = [];
-                for (let k = 0; k < body.workTypeList.length; k++){
-                    let obj = {
-                        value: '',
-                        name: '',
-                        checked: true
-                    };
-                    obj.value = body.workTypeList[k].workTypeId;
-                    obj.name = body.workTypeList[k].workTypeName;
-                    this.checkedArr.push(obj);
-                }
-                this.workText = '';
-                for (let j = 0; j < body.workTypeList.length; j++){
-                    let item = body.workTypeList[j];
-                    if (j == body.workTypeList.length-1) {
-                        this.workText += item.workTypeName;
-                    }else {
-                        this.workText += item.workTypeName + '、';
-                    }
-                }
             },
             getWorkType(){
                 let options = [];
                 api.getWorkerType().then(res => {
                     if (res.messageId == 1000) {
                         options = res.body;
+                        this.workType = [];
+                        for (let k = 0; k < options.length; k++){
+                            let obj = {
+                              value: '',
+                              name: '',
+                              checked: false
+                            };
+                            obj.value = options[k].id;
+                            obj.name = options[k].name;
+                            this.workType.push(obj)
+                        }
                     }
                 });
-                //测试数据-----------------------------待注释
-                options = [{
-                    id: 2, // 工种id
-                    name: "架子工", // 工种名称
-                },{
-                    id: 3, // 工种id
-                    name: "抹灰工", // 工种名称
-                }, {
-                    id: 4, // 工种id
-                    name: "钢筋工", // 工种名称
-                }, {
-                    id: 5, // 工种id
-                    name: "水泥工", // 工种名称
-                }
-                ];
-                this.workType = [];
-                for (let k = 0; k < options.length; k++){
-                    let obj = {
-                        value: '',
-                        name: '',
-                        checked: false
-                    };
-                    obj.value = options[k].id;
-                    obj.name = options[k].name;
-                    this.workType.push(obj)
-                }
             }
         },
         onLoad(){
+            this.id = this.$root.$mp.query.id;
             this.getWorkType();
-            this.loadData()
+            this.loadData();
+            this.provinces();
         }
     }
 </script>

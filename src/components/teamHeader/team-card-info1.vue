@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <div class="left"><img :src="info.icon" mode="widthFix"></div>
+        <div class="left">
+          <div class="imgBox" :style="{backgroundImage: 'url(' + info.icon + ')'}"></div>
+        </div>
         <div class="middle">
             <div class="p">
                 <span>{{info.name}}</span>
@@ -10,7 +12,8 @@
                 <span v-if="info.sex==1">男</span>
                 <span v-if="info.sex==0">女</span>
                 <span>{{info.nationName}}</span>
-                <span>{{info.age}}岁</span>
+                <span v-if="info.age">{{info.age}}岁</span>
+                <span v-if="!info.age">岁数未知</span>
             </div>
             <div class="p">
                 <span>{{info.phone}}</span>
@@ -40,16 +43,20 @@
             padding: 15px;
             box-sizing: border-box;
             text-align: center;
-            img{
+            .imgBox{
                 display: inline-block;
-                width: 80%;
+                width: 66px;
+                height: 66px;
                 border-radius: 8px;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center 0;
             }
         }
         .middle{
             flex: 3;
             padding: 13px 0 10px 0;
-            line-height: 1.8;
+            line-height: 2;
             .tips{
                 background: @otherColorY;
                 color: white;

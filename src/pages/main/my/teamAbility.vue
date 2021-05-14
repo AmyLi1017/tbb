@@ -15,7 +15,7 @@
                     <div class="item">材料证明</div>
                     <div class="showImg" v-if="imgSrcArr.length > 0">
                         <div class="box" v-for="(item,index) in imgSrcArr">
-                            <img :src="item" mode="widthFix">
+                            <span class="showImgBox" :style="{backgroundImage: 'url(' + item + ')'}"></span>
                             <span class="iconfont iconfalse" @click="deleteImg(index)"></span>
                         </div>
                     </div>
@@ -180,9 +180,8 @@
                     id: this.id ? this.id : '',
                     commitment: this.commitment,
                     financialStatus: this.financialStatus,
-                    files: this.files
+                    fileList: this.files
                 };
-
                 api.postTeamAbilityEdit(data).then(res => {
                     if (res.messageId == 1000) {
                         wx.showToast({
@@ -191,12 +190,14 @@
                             duration: 2000
                         });
                         this.isActive = true;
-                        wx.navigateBack({
+                        setTimeout(function () {
+                          wx.navigateBack({
                             delta: 1,
                             success: function () {
-                                getCurrentPages()[0].onLoad(); // 执行前一个页面的onLoad方法
+                              getCurrentPages()[1].onLoad(); // 执行前一个页面的onLoad方法
                             }
-                        });
+                          });
+                        }, 2000)
                     }else {
                         wx.showToast({
                             title: '保存失败，请重试！',
@@ -219,28 +220,14 @@
                 let _this = this;
                 api.postTeamAbilityGet({id: this.id}).then(res => {
                     if (res.messageId == 1000) {
-                        resBody = res.body;
+                        let resBody = res.body;
                         _this.commitment = resBody.commitment;
                         _this.mainEnterprise = resBody.mainEnterprise;
                         _this.financialStatus = resBody.financialStatus;
-                        _this.files = resBody.files;
-                        _this.imgSrcArr = resBody.files;
+                        _this.files = utils.urlStringToArray(resBody.files)
+                        _this.imgSrcArr = utils.urlStringToArray(resBody.files)
                     }
                 });
-                //带注释----------------------->>
-                let body = {
-                    id: '',
-                    customerId: '',//	客户id
-                    commitment: 'aslkdjfk',//信用承诺
-                    financialStatus: 1,//	财务状况:0未知,1良好,2一般
-                    files: ['../../../static/imgs/starUser2.jpg','../../../static/imgs/starUser2.jpg']
-                };
-                this.commitment = body.commitment;
-                this.mainEnterprise = body.mainEnterprise;
-                this.financialStatus = body.financialStatus;
-                this.files = body.files;
-                this.imgSrcArr = body.files;
-                //带注释-----------------------<<
             },
         },
         onLoad(){
@@ -315,13 +302,23 @@
                     display: inline-block;
                     width: 33.3%;
                     position: relative;
-                    img{
-                        display: inline-block;
-                        width: 100%;
-                        padding: 10px;
-                        box-sizing: border-box;
-                        border-radius: 4px;
+                    .showImgBox{
+                      display: inline-block;
+                      width: 86%;
+                      height: 80px;
+                      border-radius: 8px;
+                      background-size: cover;
+                      background-repeat: no-repeat;
+                      background-position: center 0;
+                      margin: 10px;
                     }
+                    //img{
+                    //    display: inline-block;
+                    //    width: 100%;
+                    //    padding: 10px;
+                    //    box-sizing: border-box;
+                    //    border-radius: 4px;
+                    //}
                     .iconfalse{
                         position: absolute;
                         right: 1px;

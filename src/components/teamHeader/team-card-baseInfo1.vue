@@ -1,29 +1,44 @@
 <template>
     <div class="container" @click="goToTeamAbility">
-        <div class="title"><span class="lf">承包能力</span><span class="rt iconfont iconright"></span></div>
-
-        <div class="p">
-            <span class="text">财务状况：</span>
-            <span class="val" v-if="info.financial_status == 0">未知</span>
-            <span class="val" v-if="info.financial_status == 1">良好</span>
-            <span class="val" v-if="info.financial_status == 2">一般</span>
+        <div class="title">
+          <span class="lf">承包能力</span>
+          <div class="rt">
+            <span class="status" v-if="!info">去填写</span>
+            <span class="iconfont iconright"></span>
+          </div>
         </div>
-        <div class="p">
-            <span class="text">材料证明：</span>
-            <span class="val" v-if="info.files && info.files.length > 0">{{info.files.length}}张图</span>
+        <div class="box" v-if="info">
+            <div class="p">
+                <span class="text">财务状况：</span>
+                <span class="val" v-if="info.financialStatus == 0">未知</span>
+                <span class="val" v-if="info.financialStatus == 1">良好</span>
+                <span class="val" v-if="info.financialStatus == 2">一般</span>
+            </div>
+            <div class="p">
+                <span class="text">材料证明：</span>
+                <span class="val" v-if="info.files && info.files.length > 0">{{info.files.length}}张图</span>
+            </div>
+            <div class="p">
+                <span class="text">守信承诺：</span>
+                <span class="val">{{info.commitment}}</span>
+            </div>
         </div>
-        <div class="p">
-            <span class="text">守信承诺：</span>
-            <span class="val">{{info.commitment}}</span>
-        </div>
+        <empty v-if="!info" :title="emptyTips"></empty>
     </div>
 </template>
 
 <script>
+import empty from "../empty-item";
     export default {
         name: "team-card-baseInfo1",
+        components: {empty},
         props: {
             info: ''
+        },
+        data() {
+          return {
+            emptyTips: '信息为空，请先填写信息！'
+          }
         },
         methods: {
             goToTeamAbility(){
@@ -53,6 +68,15 @@
                 flex: 1;
                 text-align: right;
                 color: @delColor;
+                .status{
+                    font-size: 12px;
+                    font-weight: normal;
+                    display: inline-block;
+                    margin-right: 5px;
+                }
+                .iconright{
+                    font-size: 12px;
+                }
             }
         }
         .p{

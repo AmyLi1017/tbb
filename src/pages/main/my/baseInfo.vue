@@ -45,10 +45,10 @@
             <div class="name">手机号</div>
             <div class="val del"><input class="itemVal" type="text" v-model="phone" disabled="disabled"></div>
         </div>
+        <div class="tips red" v-if="isAuthentication==1">*仅头像可修改！</div>
         <div class="btnBox">
             <a class="button text-space" :class="isActive?'active':''" @click="goBack">确认</a>
         </div>
-
     </div>
 </template>
 
@@ -204,7 +204,6 @@
             },
             //表单变化监听(radio)
             radioChange(e) {
-                console.log('radio发生change事件，携带value值为：', e.detail.value);
                 for (let i = 0, len = this.items.length; i < len; ++i) {
                     if (this.items[i].value === e.detail.value) {
                         this.items[i].checked = true;
@@ -213,7 +212,6 @@
                         this.items[i].checked = false;
                     }
                 }
-
             },
             goBack(){
                 //表单校验
@@ -227,7 +225,7 @@
                 this.formErr = true;
                 //校验--必填项
                 let isSelSex = true;
-                if (this.isSelSex != this.info.sex){
+                if (this.selSex != this.info.sex){
                     isSelSex = false;
                 }
                 let mustObj = {
@@ -308,12 +306,14 @@
                                 {value: '0', name: '女', checked: 'true'}
                             ]
                             _this.sexName = '女'
+                            _this.selSex = 0
                         }else {
                             _this.items = [
                                 {value: '1', name: '男', checked: 'true'},
                                 {value: '0', name: '女'}
                             ]
                             _this.sexName = '男'
+                            _this.selSex = 1
                         }
                     }else {
                         uni.showToast({
@@ -332,7 +332,7 @@
             }
         },
         onLoad() {
-            this.isAuthentication = store.state.user.customer.isAuthentication;
+            this.isAuthentication = store.state.user.isAuthentication;
             // 调用应用实例的方法获取全局数据
             this.loadData()
         }
@@ -352,6 +352,7 @@
         padding: 0 15px;
         box-sizing: border-box;
         box-shadow: 2px 2px 10px @bgColor;
+        position: relative;
         .liBox:first-child{
             padding: 8px 0;
         }
@@ -415,6 +416,10 @@
         }
         .hide{
             display: none;
+        }
+        .tips{
+          position: absolute;
+          bottom: -30px;
         }
     }
 </style>
